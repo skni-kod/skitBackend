@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>58188e14-edd7-4d56-9b90-210b5fe01426</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,10 +24,6 @@
       <ProjectReference Include="..\skit.Core\skit.Core.csproj" />
       <ProjectReference Include="..\skit.Infrastructure\skit.Infrastructure.csproj" />
       <ProjectReference Include="..\skit.Shared\skit.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\Areas\" />
     </ItemGroup>
 
 </Project>
