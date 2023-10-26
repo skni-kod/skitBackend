@@ -56,11 +56,14 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
                 {
                     case EntityState.Added:
                         entry.CurrentValues["CreatedById"] = _userId;
+                        entry.CurrentValues["CreatedAt"] = DateTimeOffset.UtcNow;
                         entry.CurrentValues["DeletedById"] = null;
+                        entry.CurrentValues["DeletedAt"] = null;
                         break;
                     
                     case EntityState.Deleted:
                         entry.CurrentValues["DeletedById"] = _userId;
+                        entry.CurrentValues["DeletedAt"] = DateTimeOffset.UtcNow;
                         break;
                 }
         }
