@@ -10,11 +10,15 @@
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.1" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-rc.2.23479.6" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\skit.Application\skit.Application.csproj" />
+      <ProjectReference Include="..\skit.Core\skit.Core.csproj" />
     </ItemGroup>
 
 </Project>

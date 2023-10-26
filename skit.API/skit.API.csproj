@@ -9,7 +9,12 @@
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
         <PackageReference Include="MediatR" Version="12.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
@@ -17,6 +22,11 @@
       <ProjectReference Include="..\skit.Application\skit.Application.csproj" />
       <ProjectReference Include="..\skit.Core\skit.Core.csproj" />
       <ProjectReference Include="..\skit.Infrastructure\skit.Infrastructure.csproj" />
+      <ProjectReference Include="..\skit.Shared\skit.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\Areas\" />
     </ItemGroup>
 
 </Project>
