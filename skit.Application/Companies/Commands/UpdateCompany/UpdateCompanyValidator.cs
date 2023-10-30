@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace skit.Application.Companies.Commands.UpdateCompany;
 
-public class UpdateCompanyValidator : AbstractValidator<UpdateCompanyCommand>
+internal class UpdateCompanyValidator : AbstractValidator<UpdateCompanyCommand>
 {
     public UpdateCompanyValidator()
     {

@@ -4,7 +4,7 @@ using skit.Core.Companies.Repositories;
 
 namespace skit.Application.Companies.Commands.UpdateCompany;
 
-internal class UpdateCompanyHandler : IRequestHandler<UpdateCompanyCommand>
+internal sealed class UpdateCompanyHandler : IRequestHandler<UpdateCompanyCommand>
 {
     private readonly ICompanyRepository _companyRepository;
 

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using skit.Core.Companies.Enums;
-using skit.Core.Identity.Entities;
 
 namespace skit.Application.Companies.Commands.UpdateCompany;
 
