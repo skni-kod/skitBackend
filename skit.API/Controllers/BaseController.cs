@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace skit.API.Controllers;
 
+[ApiController]
 public class BaseController : ControllerBase
 {
     private IMediator _mediator;
