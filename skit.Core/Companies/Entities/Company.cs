@@ -18,4 +18,12 @@ public sealed class Company : Entity
     
     public List<Address> Addresses { get; set; }
     public List<Offer> Offers { get; set; }
+
+    public void ChangeCompanyInformation(string? description, CompanySize size, string? links, Guid ownerId)
+    {
+        Description = description;
+        Size = size;
+        Links = links;
+        OwnerId = ownerId;
+    }
 }

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using skit.Infrastructure.DAL.Companies;
 using skit.Infrastructure.DAL.EF.Context;
 
 namespace skit.Infrastructure;
@@ -15,7 +16,8 @@ public static class Extensions
     {
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        
+        services.AddRepositories();
+
         services.AddDbContext<EFContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")!,
