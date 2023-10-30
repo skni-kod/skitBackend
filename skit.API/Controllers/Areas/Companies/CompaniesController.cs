@@ -24,4 +24,12 @@ public class CompaniesController : BaseController
         await Mediator.Send(command, cancellationToken);
         return Ok();
     }
+    
+    [HttpDelete("{companyId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> DeleteCompany([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    {
+        await Mediator.Send(new DeleteCompanyCommand(companyId), cancellationToken);
+        return Ok();
+    }
 }
