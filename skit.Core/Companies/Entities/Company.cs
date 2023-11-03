@@ -26,10 +26,4 @@ public sealed class Company : Entity
         Links = links;
         OwnerId = ownerId;
     }
-    
-    public void SoftDelete()
-    {
-        DeletedById = Guid.Empty;
-        DeletedAt = DateTimeOffset.Now.ToUniversalTime();
-    }
 }

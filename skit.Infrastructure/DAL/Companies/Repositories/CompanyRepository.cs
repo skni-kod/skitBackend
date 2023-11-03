@@ -25,4 +25,10 @@ internal sealed class CompanyRepository : ICompanyRepository
         _companies.Update(company);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task DeleteAsync(Company company, CancellationToken cancellationToken)
+    {
+        _companies.Remove(company);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }
