@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using skit.Application.Companies.Queries.BrowseCompanies;
+using skit.Application.Companies.Queries.BrowseCompanies.DTO;
 using skit.Application.Companies.Queries.DTO;
 using skit.Infrastructure.DAL.EF.Context;
 
 namespace skit.Infrastructure.DAL.Companies.Queries.BrowseCompanies;
 
-internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQuery, List<CompanyDto>>
+internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQuery, BrowseCompaniesDto>
 {
     private readonly EFContext _context;
 
@@ -16,13 +17,16 @@ internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQu
     }
 
     
-    public Task<List<CompanyDto>> Handle(BrowseCompaniesQuery query, CancellationToken cancellationToken)
+    public async Task<BrowseCompaniesDto> Handle(BrowseCompaniesQuery query, CancellationToken cancellationToken)
     {
         var companies = _context.Companies.AsNoTracking();
 
-        if (!string.IsNullOrWhiteSpace(query.Name))
+        if (!string.IsNullOrWhiteSpace(query.Search))
         {
-            companies = companies.Where(company => company.Name.ToLower().Contains(query.Name.ToLower()));
+            var searchTxt = $"%{query.Search}%";
+            companies = 
+                companies.Where(company => Microsoft.EntityFrameworkCore.EF.Functions.ILike(company.Name, searchTxt) ||
+                                           company.Description != null && Microsoft.EntityFrameworkCore.EF.Functions.ILike(company.Description, searchTxt));
         }
 
         if (query.Size.HasValue)
@@ -30,8 +34,10 @@ internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQu
             companies = companies.Where(company => company.Size == query.Size);
         }
 
-        return companies
+        var result = await companies
             .Select(company => company.AsDto())
             .ToListAsync(cancellationToken);
+
+        return new BrowseCompaniesDto(result);
     }
 }

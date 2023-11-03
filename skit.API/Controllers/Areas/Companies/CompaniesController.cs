@@ -2,6 +2,7 @@
 using skit.Application.Companies.Commands.DeleteCompany;
 using skit.Application.Companies.Commands.UpdateCompany;
 using skit.Application.Companies.Queries.BrowseCompanies;
+using skit.Application.Companies.Queries.BrowseCompanies.DTO;
 
 namespace skit.API.Controllers.Areas.Companies;
 
@@ -10,7 +11,7 @@ public class CompaniesController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<BrowseCompaniesQuery>>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<BrowseCompaniesDto>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(query, cancellationToken);
         return Ok(response);
