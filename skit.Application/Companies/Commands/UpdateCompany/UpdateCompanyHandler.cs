@@ -13,13 +13,12 @@ internal sealed class UpdateCompanyHandler : IRequestHandler<UpdateCompanyComman
         _companyRepository = companyRepository;
     }
     
-    public async Task Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateCompanyCommand command, CancellationToken cancellationToken)
     {
-        var company = await _companyRepository.GetAsync(request.CompanyId, cancellationToken);
-        if (company is null)
-            throw new CompanyNotFoundException("Company does not exist");
+        var company = await _companyRepository.GetAsync(command.CompanyId, cancellationToken)
+            ?? throw new CompanyNotFoundException("Company does not exist");
 
-        company.ChangeCompanyInformation(request.Description, request.Size, request.Links, request.OwnerId);
+        company.Update(command.Name, command.Description, command.Size, command.Links);
 
         await _companyRepository.UpdateAsync(company, cancellationToken);
     }
