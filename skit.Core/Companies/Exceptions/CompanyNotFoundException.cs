@@ -4,7 +4,7 @@ namespace skit.Core.Companies.Exceptions;
 
 public class CompanyNotFoundException : SkitException
 {
-    public CompanyNotFoundException(string message) : base(message)
+    public CompanyNotFoundException() : base("Company does not exist")
     {
     }
 }
