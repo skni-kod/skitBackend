@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using skit.Core.Companies.Repositories;
+using skit.Infrastructure.DAL.Companies;
+using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
 
 namespace skit.Infrastructure;
@@ -15,7 +18,7 @@ public static class Extensions
     {
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         services.AddDbContext<EFContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")!,
@@ -25,6 +28,8 @@ public static class Extensions
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 }).LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         });
+        
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
         
         return services;
     }

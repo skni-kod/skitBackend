@@ -62,6 +62,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
                         break;
                     
                     case EntityState.Deleted:
+                        entry.State = EntityState.Modified;
                         entry.CurrentValues["DeletedById"] = _userId;
                         entry.CurrentValues["DeletedAt"] = DateTimeOffset.UtcNow;
                         break;
