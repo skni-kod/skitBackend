@@ -3,6 +3,8 @@ using skit.Application.Companies.Commands.DeleteCompany;
 using skit.Application.Companies.Commands.UpdateCompany;
 using skit.Application.Companies.Queries.BrowseCompanies;
 using skit.Application.Companies.Queries.BrowseCompanies.DTO;
+using skit.Application.Companies.Queries.GetCompaniesForUpdate;
+using skit.Application.Companies.Queries.GetCompaniesForUpdate.DTO;
 
 namespace skit.API.Controllers.Areas.Companies;
 
@@ -24,6 +26,14 @@ public class CompaniesController : BaseController
         command.CompanyId = companyId;
         await Mediator.Send(command, cancellationToken);
         return Ok();
+    }
+
+    [HttpGet("{companyId:guid}/update")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<GetCompaniesForUpdateDto>> GetCompaniesForUpdate([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    {
+        var response = await Mediator.Send(new GetCompaniesForUpdateQuery(companyId), cancellationToken);
+        return Ok(response);
     }
     
     [HttpDelete("{companyId:guid}")]
