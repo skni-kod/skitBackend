@@ -2,9 +2,7 @@
 using skit.Application.Companies.Commands.DeleteCompany;
 using skit.Application.Companies.Commands.UpdateCompany;
 using skit.Application.Companies.Queries.BrowseCompanies;
-using skit.Application.Companies.Queries.BrowseCompanies.DTO;
-using skit.Application.Companies.Queries.GetCompaniesForUpdate;
-using skit.Application.Companies.Queries.GetCompaniesForUpdate.DTO;
+using skit.Application.Companies.Queries.GetCompanyForUpdate;
 
 namespace skit.API.Controllers.Areas.Companies;
 
@@ -13,7 +11,7 @@ public class CompaniesController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<BrowseCompaniesDto>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<BrowseCompaniesResponse>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(query, cancellationToken);
         return Ok(response);
@@ -30,10 +28,10 @@ public class CompaniesController : BaseController
 
     [HttpGet("{companyId:guid}/update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<GetCompaniesForUpdateDto>> GetCompaniesForUpdate([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GetCompanyForUpdateResponse>> GetCompaniesForUpdate([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
     {
-        var response = await Mediator.Send(new GetCompaniesForUpdateQuery(companyId), cancellationToken);
-        return Ok(response);
+        var response = await Mediator.Send(new GetCompanyForUpdateQuery(companyId), cancellationToken);
+        return OkOrNotFound(response);
     }
     
     [HttpDelete("{companyId:guid}")]
