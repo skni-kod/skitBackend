@@ -28,6 +28,7 @@ public class CompaniesController : BaseController
 
     [HttpGet("{companyId:guid}/update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GetCompanyForUpdateResponse>> GetCompaniesForUpdate([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(new GetCompanyForUpdateQuery(companyId), cancellationToken);
