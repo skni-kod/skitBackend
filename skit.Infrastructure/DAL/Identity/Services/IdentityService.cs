@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using skit.Core.Companies.Entities;
 using skit.Core.Companies.Exceptions;
+using skit.Core.Identity.DTO;
 using skit.Core.Identity.Entities;
 using skit.Core.Identity.Exceptions;
 using skit.Core.Identity.Services;
@@ -14,11 +15,15 @@ public sealed class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
     private readonly EFContext _context;
+    private readonly SignInManager<User> _signInManager;
+    private readonly ITokenService _tokenService;
 
-    public IdentityService(UserManager<User> userManager, EFContext context)
+    public IdentityService(UserManager<User> userManager, EFContext context, SignInManager<User> signInManager, ITokenService tokenService)
     {
         _userManager = userManager;
         _context = context;
+        _signInManager = signInManager;
+        _tokenService = tokenService;
     }
     
     public async Task SignUpCompany(string email, string companyName, string password, CancellationToken cancellationToken)
@@ -69,5 +74,24 @@ public sealed class IdentityService : IIdentityService
             throw new AddClaimException();
         
         await transaction.CommitAsync(cancellationToken);
+    }
+
+    public async Task<JwtWebToken> SignIn(string email, string password, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email != null && x.Email.Equals(email),
+                       cancellationToken)
+                   ?? throw new InvalidCredentialsException();
+
+        var result = await _signInManager.CheckPasswordSignInAsync(user, password, true);
+
+        if (!result.Succeeded)
+            throw new SignInException(result);
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var claims = await _userManager.GetClaimsAsync(user);
+
+        var jwt = await _tokenService.GenerateAccessToken(user.Id, user.Email!, roles, claims);
+
+        return jwt;
     }
 }

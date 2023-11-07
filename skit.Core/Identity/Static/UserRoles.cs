@@ -12,10 +12,7 @@ public static class UserRoles
     {
         Roles = new List<IdentityRole<Guid>>
         {
-            new IdentityRole<Guid>
-            {
-                Name = CompanyOwner
-            }
+            new(CompanyOwner)
         };
     }
     

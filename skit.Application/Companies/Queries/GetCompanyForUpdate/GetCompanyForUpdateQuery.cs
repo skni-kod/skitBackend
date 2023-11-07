@@ -2,4 +2,4 @@
 
 namespace skit.Application.Companies.Queries.GetCompanyForUpdate;
 
-public sealed record GetCompanyForUpdateQuery(Guid CompanyId) : IRequest<GetCompanyForUpdateResponse>;
+public sealed record GetCompanyForUpdateQuery : IRequest<GetCompanyForUpdateResponse>;

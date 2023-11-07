@@ -26,20 +26,20 @@ public class CompaniesController : BaseController
         return Ok();
     }
 
-    [HttpGet("{companyId:guid}/update")]
+    [HttpGet("update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GetCompanyForUpdateResponse>> GetCompaniesForUpdate([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GetCompanyForUpdateResponse>> GetCompaniesForUpdate(CancellationToken cancellationToken = default)
     {
-        var response = await Mediator.Send(new GetCompanyForUpdateQuery(companyId), cancellationToken);
+        var response = await Mediator.Send(new GetCompanyForUpdateQuery(), cancellationToken);
         return OkOrNotFound(response);
     }
     
-    [HttpDelete("{companyId:guid}")]
+    [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> DeleteCompany([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> DeleteCompany(CancellationToken cancellationToken = default)
     {
-        await Mediator.Send(new DeleteCompanyCommand(companyId), cancellationToken);
+        await Mediator.Send(new DeleteCompanyCommand(), cancellationToken);
         return Ok();
     }
 }
