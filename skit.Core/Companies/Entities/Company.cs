@@ -16,8 +16,11 @@ public sealed class Company : Entity
     public Guid OwnerId { get; private set; }
     public User Owner { get; set; }
 
-    public List<Address> Addresses { get; }
-    public List<Offer> Offers { get; }
+    private List<Address> _addresses = new();
+    public IReadOnlyCollection<Address> Addresses => _addresses;
+
+    private List<Offer> _offers => new();
+    public IReadOnlyCollection<Offer> Offers => _offers;
 
     public void Update(string name, string? description, CompanySize size, string? links)
     {
