@@ -33,9 +33,6 @@ public sealed class Company : Entity
         OwnerId = ownerId;
     }
 
-    public static Company Create(string name, string? description, CompanySize size, string? links, Guid ownerId)
-        => new(name, description, size, links, ownerId);
-
     public void Update(string name, string? description, CompanySize size, string? links)
     {
         Name = name;
