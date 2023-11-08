@@ -5,7 +5,7 @@ using skit.Core.Identity.DTO;
 
 namespace skit.API.Controllers.Areas.Auth;
 
-[Route("account")]
+[Route($"{Endpoints.BaseUrl}/account")]
 public sealed class AccountController : BaseController
 {
     [HttpPost("sign-up-company")]
