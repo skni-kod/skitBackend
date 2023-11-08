@@ -14,7 +14,7 @@ public sealed class Company : Entity
     public string? Links { get; private set; }
 
     public Guid OwnerId { get; private set; }
-    public User Owner { get; set; }
+    public User Owner { get; private set; }
 
     private List<Address> _addresses = new();
     public IReadOnlyCollection<Address> Addresses => _addresses;
