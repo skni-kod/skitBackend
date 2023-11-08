@@ -19,20 +19,6 @@ public sealed class Company : Entity
     public List<Address> Addresses { get; }
     public List<Offer> Offers { get; }
 
-    private Company()
-    {
-    }
-    
-    private Company(string name, string? description, CompanySize size, string? links, Guid ownerId)
-    {
-        Id = Guid.NewGuid();
-        Name = name;
-        Description = description;
-        Size = size;
-        Links = links;
-        OwnerId = ownerId;
-    }
-
     public void Update(string name, string? description, CompanySize size, string? links)
     {
         Name = name;
