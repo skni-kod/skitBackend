@@ -8,16 +8,33 @@ namespace skit.Core.Companies.Entities;
 
 public sealed class Company : Entity
 {
-    public string Name { get; set; }
-    public string? Description { get; set; }
-    public CompanySize Size { get; set; }
-    public string? Links { get; set; }
-    
-    public Guid OwnerId { get; set; }
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
+    public CompanySize Size { get; private set; }
+    public string? Links { get; private set; }
+
+    public Guid OwnerId { get; private set; }
     public User Owner { get; set; }
+
+    public List<Address> Addresses { get; }
+    public List<Offer> Offers { get; }
+
+    private Company()
+    {
+    }
     
-    public List<Address> Addresses { get; set; }
-    public List<Offer> Offers { get; set; }
+    private Company(string name, string? description, CompanySize size, string? links, Guid ownerId)
+    {
+        Id = Guid.NewGuid();
+        Name = name;
+        Description = description;
+        Size = size;
+        Links = links;
+        OwnerId = ownerId;
+    }
+
+    public static Company Create(string name, string? description, CompanySize size, string? links, Guid ownerId)
+        => new(name, description, size, links, ownerId);
 
     public void Update(string name, string? description, CompanySize size, string? links)
     {
