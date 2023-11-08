@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using skit.Core.Identity.Static;
 
@@ -8,10 +9,12 @@ namespace skit.API.Controllers.Areas.Dev;
 public sealed class SeederController : BaseController
 {
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly IMediator _mediator;
 
-    public SeederController(RoleManager<IdentityRole<Guid>> roleManager)
+    public SeederController(RoleManager<IdentityRole<Guid>> roleManager, IMediator mediator)
     {
         _roleManager = roleManager;
+        _mediator = mediator;
     }
     
     [HttpPost("roles")]
