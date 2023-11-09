@@ -22,6 +22,17 @@ public sealed class Company : Entity
     private List<Offer> _offers => new();
     public IReadOnlyCollection<Offer> Offers => _offers;
 
+    private Company() {}
+
+    private Company(string name, Guid ownerId)
+    {
+        Name = name;
+        OwnerId = ownerId;
+    }
+
+    public static Company Create(string name, Guid ownerId)
+        => new(name, ownerId);
+    
     public void Update(string name, string? description, CompanySize size, string? links)
     {
         Name = name;

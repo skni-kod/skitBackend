@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using skit.API.Attributes;
 using skit.Application.Companies.Commands.DeleteCompany;
 using skit.Application.Companies.Commands.UpdateCompany;
 using skit.Application.Companies.Queries.BrowseCompanies;
-using skit.Application.Companies.Queries.BrowseCompanies.DTO;
-using skit.Application.Companies.Queries.GetCompaniesForUpdate;
-using skit.Application.Companies.Queries.GetCompaniesForUpdate.DTO;
+using skit.Application.Companies.Queries.GetCompanyForUpdate;
+using skit.Core.Identity.Static;
 
 namespace skit.API.Controllers.Areas.Companies;
 
 [Route($"{Endpoints.BaseUrl}/companies")]
+[ApiAuthorize(Roles = UserRoles.CompanyOwner)]
 public class CompaniesController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<BrowseCompaniesDto>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<BrowseCompaniesResponse>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(query, cancellationToken);
         return Ok(response);
@@ -28,19 +29,20 @@ public class CompaniesController : BaseController
         return Ok();
     }
 
-    [HttpGet("{companyId:guid}/update")]
+    [HttpGet("update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<GetCompaniesForUpdateDto>> GetCompaniesForUpdate([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GetCompanyForUpdateResponse>> GetCompaniesForUpdate(CancellationToken cancellationToken = default)
     {
-        var response = await Mediator.Send(new GetCompaniesForUpdateQuery(companyId), cancellationToken);
-        return Ok(response);
+        var response = await Mediator.Send(new GetCompanyForUpdateQuery(), cancellationToken);
+        return OkOrNotFound(response);
     }
     
-    [HttpDelete("{companyId:guid}")]
+    [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> DeleteCompany([FromRoute] Guid companyId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> DeleteCompany(CancellationToken cancellationToken = default)
     {
-        await Mediator.Send(new DeleteCompanyCommand(companyId), cancellationToken);
+        await Mediator.Send(new DeleteCompanyCommand(), cancellationToken);
         return Ok();
     }
 }

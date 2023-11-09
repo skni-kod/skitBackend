@@ -1,9 +1,10 @@
-﻿using skit.Core.Companies.Enums;
+﻿using skit.Core.Common.DTO;
+using skit.Core.Companies.Enums;
 
 namespace skit.Application.Companies.Queries.DTO;
 
 public sealed class CompanyDto
 {
     public string Name { get; set; }
-    public CompanySize Size { get; set; }
+    public BaseEnum? Size { get; set; }
 }

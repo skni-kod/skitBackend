@@ -1,11 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using skit.Core.Identity.Exceptions;
 using skit.Shared.Abstractions.Exceptions;
 
 namespace skit.API.Filters;
 
 public class ExceptionFilter : ExceptionFilterAttribute
 {
+    private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+    
+    public ExceptionFilter()
+    {
+        _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
+        {
+            { typeof(CreateUserException), HandleCreateUserException },
+        };
+    }
+    
     public override void OnException(ExceptionContext context)
     {
         HandleException(context);
@@ -15,6 +26,13 @@ public class ExceptionFilter : ExceptionFilterAttribute
 
     private void HandleException(ExceptionContext context)
     {
+        var type = context.Exception.GetType();
+        if (_exceptionHandlers.ContainsKey(type))
+        {
+            _exceptionHandlers[type].Invoke(context);
+            return;
+        }
+        
         if (context.Exception is SkitException)
         {
             HandleNetCoreTemplateException(context);
@@ -29,6 +47,21 @@ public class ExceptionFilter : ExceptionFilterAttribute
         var exception = context.Exception as SkitException;
 
         var details = new ProblemDetails
+        {
+            Title = exception?.Message
+        };
+
+        context.Result = new BadRequestObjectResult(details);
+
+        context.ExceptionHandled = true;
+    }
+    
+    private void HandleCreateUserException(ExceptionContext context)
+    {
+        var exception = context.Exception as CreateUserException;
+
+
+        var details = new ValidationProblemDetails(exception?.Errors)
         {
             Title = exception?.Message
         };

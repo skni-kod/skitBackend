@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using skit.Application.Companies.Queries.BrowseCompanies;
-using skit.Application.Companies.Queries.BrowseCompanies.DTO;
 using skit.Application.Companies.Queries.DTO;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Abstractions;
+using skit.Shared.Abstractions.Extensions;
 
 namespace skit.Infrastructure.DAL.Companies.Queries.BrowseCompanies;
 
-internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQuery, BrowseCompaniesDto>
+internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQuery, BrowseCompaniesResponse>
 {
     private readonly EFContext _context;
 
@@ -16,18 +16,17 @@ internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQu
     {
         _context = context;
     }
-
     
-    public async Task<BrowseCompaniesDto> Handle(BrowseCompaniesQuery query, CancellationToken cancellationToken)
+    public async Task<BrowseCompaniesResponse> Handle(BrowseCompaniesQuery query, CancellationToken cancellationToken)
     {
         var companies = _context.Companies.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var searchTxt = $"%{query.Search}%";
-            companies = 
-                companies.Where(company => Microsoft.EntityFrameworkCore.EF.Functions.ILike(company.Name, searchTxt) ||
-                                           company.Description != null && Microsoft.EntityFrameworkCore.EF.Functions.ILike(company.Description, searchTxt));
+            companies = companies
+                .Where(company => EFCore.Functions.ILike(company.Name, searchTxt) || 
+                    company.Description != null && EFCore.Functions.ILike(company.Description, searchTxt));
         }
 
         if (query.Size.HasValue)
@@ -37,8 +36,8 @@ internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQu
 
         var result = await companies
             .Select(company => company.AsDto())
-            .PaginateAsync(query);
+            .ToPaginatedListAsync(query);
 
-        return new BrowseCompaniesDto(result);
+        return new BrowseCompaniesResponse(result);
     }
 }

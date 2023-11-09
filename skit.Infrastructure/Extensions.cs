@@ -5,10 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using skit.Core.Common.Services;
 using skit.Core.Companies.Repositories;
+using skit.Core.Identity.Services;
+using skit.Infrastructure.Common.Services;
 using skit.Infrastructure.DAL.Companies;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
+using skit.Infrastructure.DAL.Identity.Services;
 
 namespace skit.Infrastructure;
 
@@ -30,6 +34,10 @@ public static class Extensions
         });
         
         services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IDateService, DateService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<ITokenService, TokenService>();
         
         return services;
     }
