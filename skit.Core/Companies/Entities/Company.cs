@@ -12,12 +12,15 @@ public sealed class Company : Entity
     public string? Description { get; private set; }
     public CompanySize Size { get; private set; }
     public string? Links { get; private set; }
-    
+
     public Guid OwnerId { get; private set; }
     public User Owner { get; private set; }
-    
-    public List<Address> Addresses { get; set; }
-    public List<Offer> Offers { get; set; }
+
+    private List<Address> _addresses = new();
+    public IReadOnlyCollection<Address> Addresses => _addresses;
+
+    private List<Offer> _offers => new();
+    public IReadOnlyCollection<Offer> Offers => _offers;
 
     private Company() {}
 
