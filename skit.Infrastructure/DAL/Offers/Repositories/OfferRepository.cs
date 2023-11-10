@@ -16,9 +16,18 @@ internal sealed class OfferRepository : IOfferRepository
         _offers = _context.Offers;
     }
 
-    public async Task AddAsync(Offer offer, CancellationToken cancellationToken)
+    public async Task<Offer> GetAsync(Guid offerId, CancellationToken cancellationToken)
+        => await _offers.SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
+
+        public async Task AddAsync(Offer offer, CancellationToken cancellationToken)
     {
         await _offers.AddAsync(offer, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }    
+    
+    public async Task UpdateAsync(Offer offer, CancellationToken cancellationToken)
+    {
+        _offers.Update(offer);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

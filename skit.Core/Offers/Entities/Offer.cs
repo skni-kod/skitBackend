@@ -63,4 +63,22 @@ public sealed class Offer : Entity
         OfferWorkLocation workLocation,
         Guid companyId) =>
         new(title, description, dateFrom, dateTo, status, seniority, workLocation, companyId);
+
+    public void Update(
+        string title,
+        string? description,
+        DateTimeOffset? dateFrom,
+        DateTimeOffset? dateTo,
+        OfferStatus status,
+        OfferSeniority seniority,
+        OfferWorkLocation workLocation)
+    {
+        Title = title;
+        Description = description;
+        DateFrom = dateFrom;
+        DateTo = dateTo;
+        Status = status;
+        Seniority = seniority;
+        WorkLocation = workLocation;
+    }
 }
