@@ -6,9 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using skit.Core.Companies.Repositories;
-using skit.Infrastructure.DAL.Companies;
+using skit.Core.Offers.Repositories;
+using skit.Core.Salaries.Repositories;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
+using skit.Infrastructure.DAL.Offers.Repositories;
+using skit.Infrastructure.DAL.Salaries.Repositories;
 
 namespace skit.Infrastructure;
 
@@ -30,6 +33,8 @@ public static class Extensions
         });
         
         services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IOfferRepository, OfferRepository>();
+        services.AddScoped<ISalaryRepository, SalaryRepository>();
         
         return services;
     }
