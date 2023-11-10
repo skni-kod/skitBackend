@@ -20,7 +20,6 @@ public sealed class Salary : Entity
 
     private Salary(decimal? salaryFrom, decimal? salaryTo, SalaryEmploymentType? employmentType, Guid offerId)
     {
-        Id = Guid.NewGuid();
         SalaryFrom = salaryFrom;
         SalaryTo = salaryTo;
         EmploymentType = employmentType;
