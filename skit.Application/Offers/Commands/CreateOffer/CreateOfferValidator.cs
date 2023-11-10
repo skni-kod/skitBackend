@@ -10,10 +10,6 @@ public class CreateOfferValidator : AbstractValidator<CreateOfferCommand>
         RuleFor(command => command.Title)
             .NotEmpty();
 
-        RuleFor(command => command.DateFrom)
-            .LessThan(command => command.DateTo)
-            .When(command => command.DateFrom != null && command.DateTo != null);
-        
         RuleFor(command => command.DateTo)
             .GreaterThan(command => command.DateFrom)
             .When(command => command.DateFrom != null && command.DateTo != null);
