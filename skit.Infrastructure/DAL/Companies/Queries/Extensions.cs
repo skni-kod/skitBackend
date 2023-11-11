@@ -1,5 +1,5 @@
 ﻿using skit.Application.Companies.Queries.DTO;
-using skit.Application.Companies.Queries.GetCompaniesForUpdate.DTO;
+using skit.Application.Companies.Queries.GetCompanyForUpdate.DTO;
 using skit.Core.Companies.Entities;
 using skit.Core.Companies.Enums;
 
@@ -16,9 +16,9 @@ internal static class Extensions
         };
     }
     
-    public static GetCompaniesForUpdateDto AsGetCompaniesForUpdateDto(this Company company)
+    public static GetCompanyForUpdateDto AsGetCompaniesForUpdateDto(this Company company)
     {
-        return new GetCompaniesForUpdateDto
+        return new GetCompanyForUpdateDto
         {
             Name = company.Name,
             Description = company.Description,

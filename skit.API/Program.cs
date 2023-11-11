@@ -18,7 +18,7 @@ builder.Services.AddIdentityConfig(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerConfig();
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddApplication();

@@ -9,4 +9,5 @@ public class User : IdentityUser<Guid>
     public Company Company { get; set; }
     
     public bool IsDeleted { get; set; }
+    
 }

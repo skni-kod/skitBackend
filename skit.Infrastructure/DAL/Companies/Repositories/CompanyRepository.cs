@@ -16,7 +16,7 @@ internal sealed class CompanyRepository : ICompanyRepository
         _companies = _context.Companies;
     }
 
-    public async Task<Company> GetAsync(Guid companyId, CancellationToken cancellationToken)
+    public async Task<Company?> GetAsync(Guid companyId, CancellationToken cancellationToken)
         => await _companies.SingleOrDefaultAsync(company => company.Id == companyId, cancellationToken: cancellationToken);
 
 

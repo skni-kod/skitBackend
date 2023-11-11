@@ -1,4 +1,4 @@
-﻿namespace skit.Shared.Abstractions.Queries;
+﻿namespace skit.Shared.Abstractions.Models;
 
 public record PaginationRequest
 {
@@ -22,11 +22,5 @@ public record PaginationRequest
     {
         _pageNumber = 1;
         _pageSize = 10;
-    }
-
-    public PaginationRequest(int pageNumber, int pageSize)
-    {
-        PageNumber = pageNumber;
-        PageSize = pageSize;
     }
 }
