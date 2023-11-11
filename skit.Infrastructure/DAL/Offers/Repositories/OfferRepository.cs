@@ -30,4 +30,12 @@ internal sealed class OfferRepository : IOfferRepository
         _offers.Update(offer);
         await _context.SaveChangesAsync(cancellationToken);
     }
+    // public async Task<bool> SalariesExistInOffer(Guid offerId, IEnumerable<Guid> salaryIds, CancellationToken cancellationToken)
+    // {
+    //     var offer = await _offers
+    //         .Include(offer => offer.Salaries)
+    //         .SingleAsync(offer => offer.Id == offerId, cancellationToken);
+    //
+    //     return salaryIds.Any(x => offer.Salaries.All(y => y.Id != x));
+    // }
 }

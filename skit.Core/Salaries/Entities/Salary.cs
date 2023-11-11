@@ -29,4 +29,9 @@ public sealed class Salary : Entity
     public static Salary Create(decimal? salaryFrom, decimal? salaryTo, SalaryEmploymentType? employmentType, Guid offerId)
         => new(salaryFrom, salaryTo, employmentType, offerId);
 
+    public void Update(decimal? salaryFrom, decimal? salaryTo)
+    {
+        SalaryFrom = salaryFrom;
+        SalaryTo = salaryTo;
+    }
 }
