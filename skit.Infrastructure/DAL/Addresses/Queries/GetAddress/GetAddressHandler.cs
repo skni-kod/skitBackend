@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using skit.Application.Addresses.Queries.GetAddressForUpdate;
+using skit.Application.Addresses.Queries.GetAddress;
 using skit.Infrastructure.DAL.EF.Context;
 
 namespace skit.Infrastructure.DAL.Addresses.Queries.GetAddress;
