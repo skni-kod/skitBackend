@@ -13,6 +13,7 @@ using skit.Infrastructure.DAL.Companies;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Infrastructure.DAL.Identity.Services;
+using skit.Infrastructure.Integrations.Emails.Configuration;
 
 namespace skit.Infrastructure;
 
@@ -23,6 +24,10 @@ public static class Extensions
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
+        var smtpConfig = new SmtpConfig();
+        configuration.GetSection("SMTP").Bind(smtpConfig);
+        services.AddSingleton(smtpConfig);
+        
         services.AddDbContext<EFContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")!,
