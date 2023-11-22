@@ -1,9 +1,8 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
-using skit.Core.Emails.Sender;
 using skit.Infrastructure.Integrations.Emails.Configuration;
 
-namespace skit.Infrastructure.Integrations.Emails.Sender;
+namespace skit.Infrastructure.Integrations.Emails.Services;
 
 public sealed class EmailSenderService : IEmailSenderService
 {

@@ -1,4 +1,4 @@
-﻿namespace skit.Core.Emails.Sender;
+﻿namespace skit.Infrastructure.Integrations.Emails.Services;
 
 public interface IEmailSenderService
 {

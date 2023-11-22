@@ -8,11 +8,14 @@ using Microsoft.Extensions.Logging;
 using skit.Core.Common.Services;
 using skit.Core.Companies.Repositories;
 using skit.Core.Identity.Services;
+using skit.Infrastructure.Common;
 using skit.Infrastructure.Common.Services;
+using skit.Infrastructure.DAL;
 using skit.Infrastructure.DAL.Companies;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Infrastructure.DAL.Identity.Services;
+using skit.Infrastructure.Integrations;
 using skit.Infrastructure.Integrations.Emails.Configuration;
 
 namespace skit.Infrastructure;
@@ -24,25 +27,9 @@ public static class Extensions
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        var smtpConfig = new SmtpConfig();
-        configuration.GetSection("SMTP").Bind(smtpConfig);
-        services.AddSingleton(smtpConfig);
-        
-        services.AddDbContext<EFContext>(options =>
-        {
-            options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")!,
-                opt =>
-                {
-                    opt.CommandTimeout(30);
-                    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                }).LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
-        });
-        
-        services.AddScoped<ICompanyRepository, CompanyRepository>();
-        services.AddScoped<IIdentityService, IdentityService>();
-        services.AddScoped<IDateService, DateService>();
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddCommonInfrastructure();
+        services.AddDal(configuration);
+        services.AddIntegrations(configuration);
         
         return services;
     }
