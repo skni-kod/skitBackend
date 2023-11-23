@@ -4,7 +4,7 @@ using skit.Core.Identity.Services;
 
 namespace skit.Application.Identity.Commands.SignIn;
 
-public sealed class SignInHandler : IRequestHandler<SignInCommand, JwtWebToken>
+public sealed class SignInHandler : IRequestHandler<SignInCommand, JsonWebToken>
 {
     private readonly IIdentityService _identityService;
 
@@ -13,7 +13,7 @@ public sealed class SignInHandler : IRequestHandler<SignInCommand, JwtWebToken>
         _identityService = identityService;
     }
     
-    public async Task<JwtWebToken> Handle(SignInCommand request, CancellationToken cancellationToken)
+    public async Task<JsonWebToken> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
         var jwtWebToken = await _identityService.SignIn(request.Email, request.Password, cancellationToken);
 
