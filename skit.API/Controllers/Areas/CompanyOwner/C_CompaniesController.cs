@@ -10,7 +10,7 @@ namespace skit.API.Controllers.Areas.Companies;
 
 [Route($"{Endpoints.BaseUrl}/companies")]
 [ApiAuthorize(Roles = UserRoles.CompanyOwner)]
-public class CompaniesController : BaseController
+public class C_CompaniesController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
