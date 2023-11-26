@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\skit.Core\skit.Core.csproj" />
+      <ProjectReference Include="..\skit.Shared\skit.Shared.csproj" />
     </ItemGroup>
 
 </Project>
