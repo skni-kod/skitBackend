@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using skit.Core.Addresses.Repositories;
 using skit.Core.Common.Services;
 using skit.Core.Companies.Repositories;
 using skit.Core.Identity.Services;
@@ -30,7 +31,7 @@ public static class Extensions
         services.AddCommonInfrastructure();
         services.AddDal(configuration);
         services.AddIntegrations(configuration);
-        
+      
         return services;
     }
 }
