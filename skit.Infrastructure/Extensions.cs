@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using skit.Core.Addresses.Repositories;
 using skit.Core.Common.Services;
 using skit.Core.Companies.Repositories;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Repositories;
 using skit.Core.Identity.Services;
 using skit.Infrastructure.Common.Services;
+using skit.Infrastructure.DAL.Addresses.Repositories;
 using skit.Infrastructure.DAL.Companies;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
@@ -44,6 +46,7 @@ public static class Extensions
         services.AddScoped<IDateService, DateService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
         
         return services;
     }
