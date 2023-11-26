@@ -1,14 +1,13 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using skit.Application.Offers.Commands.CreateOffer;
 using skit.Application.Offers.Commands.UpdateOffer;
 using skit.Application.Offers.Queries.BrowseOffers;
 using skit.Application.Offers.Queries.BrowseOffers.DTO;
 
-namespace skit.API.Controllers.Areas.Offers;
+namespace skit.API.Controllers.Areas.CompanyOwner;
 
 [Route($"{Endpoints.BaseUrl}/offers")]
-public class OffersController : BaseController
+public class C_OffersController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
