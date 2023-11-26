@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using skit.Core.Emails.Services;
 using skit.Infrastructure.Integrations.Emails.Configuration;
 using skit.Infrastructure.Integrations.Emails.Services;
 

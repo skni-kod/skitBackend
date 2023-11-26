@@ -31,14 +31,12 @@ public sealed class Address : Entity
     public static Address Create(string city, string street, string? houseNumber, string? postalCode, Guid companyId)
         => new(city, street, houseNumber, postalCode, companyId);
     
-    public Address Update(string city, string street, string? houseNumber, string? postalCode)
+    public void Update(string city, string street, string? houseNumber, string? postalCode)
     {
         City = city;
         Street = street;
         HouseNumber = houseNumber;
         PostalCode = postalCode;
-
-        return this;
     }
 
 

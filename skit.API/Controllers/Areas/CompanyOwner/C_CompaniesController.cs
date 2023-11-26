@@ -6,7 +6,7 @@ using skit.Application.Companies.Queries.BrowseCompanies;
 using skit.Application.Companies.Queries.GetCompanyForUpdate;
 using skit.Core.Identity.Static;
 
-namespace skit.API.Controllers.Areas.Companies;
+namespace skit.API.Controllers.Areas.CompanyOwner;
 
 [Route($"{Endpoints.BaseUrl}/companies")]
 [ApiAuthorize(Roles = UserRoles.CompanyOwner)]

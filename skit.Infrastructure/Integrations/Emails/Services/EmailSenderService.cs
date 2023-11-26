@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using skit.Core.Emails.Services;
 using skit.Infrastructure.Integrations.Emails.Configuration;
 
 namespace skit.Infrastructure.Integrations.Emails.Services;

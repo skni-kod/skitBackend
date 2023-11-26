@@ -3,8 +3,10 @@ using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using skit.Core.Addresses.Repositories;
 using skit.Core.Companies.Repositories;
 using skit.Core.Identity.Services;
+using skit.Infrastructure.DAL.Addresses.Repositories;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Infrastructure.DAL.Identity.Services;
@@ -29,6 +31,7 @@ internal static class Extension
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
         
         return services;
     }
