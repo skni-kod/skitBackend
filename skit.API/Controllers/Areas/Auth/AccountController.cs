@@ -11,11 +11,11 @@ public sealed class AccountController : BaseController
     [HttpPost("sign-up-company")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SignUpCompany([FromBody] SignUpCompanyCommand command,
+    public async Task<ActionResult<JwtWebToken>> SignUpCompany([FromBody] SignUpCompanyCommand command,
         CancellationToken cancellationToken)
     {
-        await Mediator.Send(command, cancellationToken);
-        return Created(string.Empty, null);
+        var result = await Mediator.Send(command, cancellationToken);
+        return Created(string.Empty, result);
     }
 
     [HttpPost("sign-in")]
