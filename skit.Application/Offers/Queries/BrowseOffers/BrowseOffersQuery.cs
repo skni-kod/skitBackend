@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using skit.Application.Offers.Queries.BrowseOffers.DTO;
-using skit.Shared.Abstractions.Queries;
+using skit.Shared.Abstractions.Models;
 
 namespace skit.Application.Offers.Queries.BrowseOffers;
 
