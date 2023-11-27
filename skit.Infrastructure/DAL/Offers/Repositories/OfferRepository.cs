@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using skit.Core.Offers.Entities;
+﻿using skit.Core.Offers.Entities;
 using skit.Core.Offers.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
 
@@ -16,8 +15,8 @@ internal sealed class OfferRepository : IOfferRepository
         _offers = _context.Offers;
     }
 
-    public async Task<Offer> GetAsync(Guid offerId, CancellationToken cancellationToken)
-        => await _offers.SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
+    public async Task<Offer?> GetAsync(Guid offerId, CancellationToken cancellationToken)
+        => await _offers.Include(offer => offer.Salaries).SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
 
         public async Task AddAsync(Offer offer, CancellationToken cancellationToken)
     {
@@ -30,12 +29,4 @@ internal sealed class OfferRepository : IOfferRepository
         _offers.Update(offer);
         await _context.SaveChangesAsync(cancellationToken);
     }
-    // public async Task<bool> SalariesExistInOffer(Guid offerId, IEnumerable<Guid> salaryIds, CancellationToken cancellationToken)
-    // {
-    //     var offer = await _offers
-    //         .Include(offer => offer.Salaries)
-    //         .SingleAsync(offer => offer.Id == offerId, cancellationToken);
-    //
-    //     return salaryIds.Any(x => offer.Salaries.All(y => y.Id != x));
-    // }
 }

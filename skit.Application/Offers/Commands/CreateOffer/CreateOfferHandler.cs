@@ -1,22 +1,53 @@
 ﻿using MediatR;
+using skit.Core.Addresses.Exceptions;
+using skit.Core.Addresses.Repositories;
+using skit.Core.Common.Services;
 using skit.Core.Offers.Entities;
 using skit.Core.Offers.Repositories;
+using skit.Core.Salaries.Entities;
+using skit.Core.Salaries.Exceptions;
+using skit.Shared.Responses;
 
 namespace skit.Application.Offers.Commands.CreateOffer;
 
-internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, CreateOfferResponse>
+internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, CreateOrUpdateResponse>
 {
     private readonly IOfferRepository _offerRepository;
-    private IMediator _mediator;
+    private readonly IAddressRepository _addressRepository;
+    private readonly ICurrentUserService _currentUserService;
 
-    public CreateOfferHandler(IOfferRepository offerRepository, IMediator mediator)
+    public CreateOfferHandler(IOfferRepository offerRepository, IAddressRepository addressRepository, ICurrentUserService currentUserService)
     {
         _offerRepository = offerRepository;
-        _mediator = mediator;
+        _addressRepository = addressRepository;
+        _currentUserService = currentUserService;
     }
 
-    public async Task<CreateOfferResponse> Handle(CreateOfferCommand command, CancellationToken cancellationToken)
+    public async Task<CreateOrUpdateResponse> Handle(CreateOfferCommand command, CancellationToken cancellationToken)
     {
+        if(command.Salaries.Any())
+        {
+            var isSingleEmploymentTypes = command.Salaries
+                .GroupBy(salary => salary.EmploymentType)
+                .All(grp => grp.Count() == 1);
+
+            if (!isSingleEmploymentTypes)
+                throw new DuplicateEmploymentTypeException();
+        }
+
+        var addresses = await _addressRepository.GetFromIdsListForCompanyAsync(command.AddressIds,
+            _currentUserService.CompanyId, cancellationToken);
+
+        if (addresses.Count != command.AddressIds.Count)
+            throw new AddressNotFoundException();
+        
+        var salaries = new List<Salary>();
+        
+        foreach (var salary in command.Salaries)
+        {
+            salaries.Add(Salary.Create(salary.SalaryFrom, salary.SalaryTo, salary.EmploymentType));
+        }
+
         var offer = Offer.Create(
             command.Title,
             command.Description,
@@ -25,14 +56,12 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
             command.Status,
             command.Seniority,
             command.WorkLocation,
-            command.CompanyId);
+            _currentUserService.CompanyId,
+            salaries,
+            addresses);
 
         await _offerRepository.AddAsync(offer, cancellationToken);
-
-        command.Salaries.OfferId = offer.Id;
         
-        var createSalariesFromListResponse = await _mediator.Send(command.Salaries, cancellationToken);
-
-        return new CreateOfferResponse(offer.Id, createSalariesFromListResponse.Ids);
+        return new CreateOrUpdateResponse(offer.Id);
     }
 }

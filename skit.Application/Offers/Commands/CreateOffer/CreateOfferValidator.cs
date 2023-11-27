@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using skit.Application.Salaries.Commands.CreateSalariesFromList;
 
 namespace skit.Application.Offers.Commands.CreateOffer;
 
@@ -23,7 +22,20 @@ public class CreateOfferValidator : AbstractValidator<CreateOfferCommand>
         RuleFor(command => command.WorkLocation)
             .IsInEnum();
 
-        RuleFor(command => command.Salaries)
-            .SetValidator(new CreateSalariesFromListValidator());
+        RuleForEach(command => command.Salaries).ChildRules(salary =>
+        {
+            salary.RuleFor(s => s.EmploymentType)
+                .IsInEnum();
+
+            salary.RuleFor(s => s.SalaryFrom)
+                .LessThan(s => s.SalaryTo)
+                .When(s => s.SalaryTo != null);
+        });
+
+        RuleFor(command => command.AddressIds)
+            .Must(collection => collection.Count > 0);
+
+        RuleForEach(command => command.AddressIds)
+            .NotEmpty();
     }
 }

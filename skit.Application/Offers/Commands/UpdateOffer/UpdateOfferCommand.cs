@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using skit.Application.Salaries.Commands.UpdateSalariesFromList;
 using skit.Core.Offers.Enums;
+using skit.Core.Salaries.Enums;
 
 namespace skit.Application.Offers.Commands.UpdateOffer;
 
@@ -12,7 +12,9 @@ public sealed record UpdateOfferCommand(
     OfferStatus Status,
     OfferSeniority Seniority,
     OfferWorkLocation WorkLocation,
-    UpdateSalariesFromListCommand Salaries) : IRequest
+    List<UpdateOfferSalaries> Salaries) : IRequest
 {
     internal Guid OfferId { get; set; }
 }
+
+public sealed record UpdateOfferSalaries(decimal SalaryFrom, decimal? SalaryTo, SalaryEmploymentType EmploymentType);

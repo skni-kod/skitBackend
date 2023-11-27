@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using skit.Core.Addresses.Entities;
+﻿using skit.Core.Addresses.Entities;
 using skit.Core.Companies.Entities;
 using skit.Core.JobApplications.Entities;
 using skit.Core.Offers.Enums;
@@ -21,11 +20,11 @@ public sealed class Offer : Entity
     public Guid CompanyId { get; private set; }
     public Company Company { get; private set; }
     
-    private List<Address> _addresses => new();
+    private List<Address> _addresses = new();
     public IReadOnlyCollection<Address> Addresses => _addresses;
-    private List<Salary> _salaries => new();
+    private List<Salary> _salaries = new();
     public IReadOnlyCollection<Salary> Salaries => _salaries;
-    private List<JobApplication> _jobApplications => new();
+    private List<JobApplication> _jobApplications = new();
     public IReadOnlyCollection<JobApplication> JobApplications => _jobApplications;
 
     private Offer()
@@ -40,8 +39,9 @@ public sealed class Offer : Entity
         OfferStatus status,
         OfferSeniority seniority,
         OfferWorkLocation workLocation,
-        Guid companyId
-    )
+        Guid companyId,
+        List<Salary> salaries,
+        List<Address> addresses)
     {
         Title = title;
         Description = description;
@@ -51,6 +51,8 @@ public sealed class Offer : Entity
         Seniority = seniority;
         WorkLocation = workLocation;
         CompanyId = companyId;
+        _salaries = salaries;
+        _addresses = addresses;
     }
 
     public static Offer Create(
@@ -61,8 +63,10 @@ public sealed class Offer : Entity
         OfferStatus status,
         OfferSeniority seniority,
         OfferWorkLocation workLocation,
-        Guid companyId) =>
-        new(title, description, dateFrom, dateTo, status, seniority, workLocation, companyId);
+        Guid companyId,
+        List<Salary> salaries,
+        List<Address> addresses) =>
+        new(title, description, dateFrom, dateTo, status, seniority, workLocation, companyId, salaries, addresses);
 
     public void Update(
         string title,
@@ -71,7 +75,8 @@ public sealed class Offer : Entity
         DateTimeOffset? dateTo,
         OfferStatus status,
         OfferSeniority seniority,
-        OfferWorkLocation workLocation)
+        OfferWorkLocation workLocation,
+        List<Salary> salaries)
     {
         Title = title;
         Description = description;
@@ -80,5 +85,6 @@ public sealed class Offer : Entity
         Status = status;
         Seniority = seniority;
         WorkLocation = workLocation;
+        _salaries = salaries;
     }
 }

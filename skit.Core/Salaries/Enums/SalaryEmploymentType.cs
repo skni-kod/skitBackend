@@ -2,8 +2,7 @@
 
 public enum SalaryEmploymentType
 {
-    NoData = 0,
-    Permanent = 1,
-    B2B = 2,
-    MandateContract = 3
+    Permanent = 0,
+    B2B = 1,
+    MandateContract = 2
 }
