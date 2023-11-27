@@ -24,7 +24,7 @@ public sealed class TokenService : ITokenService
             SecurityAlgorithms.HmacSha256);
     }
     
-    public async Task<JwtWebToken> GenerateAccessToken(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims)
+    public async Task<JsonWebToken> GenerateAccessToken(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims)
     {
         var now = _dateService.CurrentDate();
         var issuer = _authConfig.JwtIssuer;
@@ -63,7 +63,7 @@ public sealed class TokenService : ITokenService
         
         var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-        return new JwtWebToken
+        return new JsonWebToken
         {
             AccessToken = token,
             Expires = new DateTimeOffset(expires).ToUnixTimeSeconds(),

@@ -10,5 +10,5 @@ public sealed record UpdateAddressCommand(
     string? HouseNumber,
     string? PostalCode) : IRequest<CreateOrUpdateResponse>
 {
-    [JsonIgnore] public Guid Id { get; set; }
+    internal Guid Id { get; set; }
 }

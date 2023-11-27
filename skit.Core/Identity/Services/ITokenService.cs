@@ -5,5 +5,5 @@ namespace skit.Core.Identity.Services;
 
 public interface ITokenService
 {
-    Task<JwtWebToken> GenerateAccessToken(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims);
+    Task<JsonWebToken> GenerateAccessToken(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims);
 }
