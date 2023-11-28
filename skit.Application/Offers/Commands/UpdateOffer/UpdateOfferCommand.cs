@@ -12,7 +12,8 @@ public sealed record UpdateOfferCommand(
     OfferStatus Status,
     OfferSeniority Seniority,
     OfferWorkLocation WorkLocation,
-    List<UpdateOfferSalaries> Salaries) : IRequest
+    List<UpdateOfferSalaries> Salaries,
+    List<Guid> AddressIds) : IRequest
 {
     internal Guid OfferId { get; set; }
 }

@@ -76,7 +76,8 @@ public sealed class Offer : Entity
         OfferStatus status,
         OfferSeniority seniority,
         OfferWorkLocation workLocation,
-        List<Salary> salaries)
+        List<Salary> salaries,
+        List<Address> addresses)
     {
         Title = title;
         Description = description;
@@ -86,5 +87,6 @@ public sealed class Offer : Entity
         Seniority = seniority;
         WorkLocation = workLocation;
         _salaries = salaries;
+        _addresses = addresses;
     }
 }

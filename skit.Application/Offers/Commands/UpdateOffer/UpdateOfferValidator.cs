@@ -21,5 +21,21 @@ public class UpdateOfferValidator : AbstractValidator<UpdateOfferCommand>
         
         RuleFor(command => command.WorkLocation)
             .IsInEnum();
+        
+        RuleForEach(command => command.Salaries).ChildRules(salary =>
+        {
+            salary.RuleFor(s => s.EmploymentType)
+                .IsInEnum();
+
+            salary.RuleFor(s => s.SalaryFrom)
+                .LessThan(s => s.SalaryTo)
+                .When(s => s.SalaryTo != null);
+        });
+
+        RuleFor(command => command.AddressIds)
+            .Must(collection => collection.Count > 0);
+
+        RuleForEach(command => command.AddressIds)
+            .NotEmpty();
     }
 }

@@ -16,7 +16,10 @@ internal sealed class OfferRepository : IOfferRepository
     }
 
     public async Task<Offer?> GetAsync(Guid offerId, CancellationToken cancellationToken)
-        => await _offers.Include(offer => offer.Salaries).SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
+        => await _offers
+            .Include(offer => offer.Salaries)
+            .Include(offer => offer.Addresses)
+            .SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
 
         public async Task AddAsync(Offer offer, CancellationToken cancellationToken)
     {
