@@ -32,4 +32,10 @@ internal sealed class OfferRepository : IOfferRepository
         _offers.Update(offer);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task DeleteAsync(Offer offer, CancellationToken cancellationToken)
+    {
+        _offers.Remove(offer);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }
