@@ -1,6 +1,6 @@
 ﻿namespace skit.Core.Identity.DTO;
 
-public sealed class JwtWebToken
+public sealed class JsonWebToken
 {
     public string AccessToken { get; init; }
     public long Expires { get; init; }

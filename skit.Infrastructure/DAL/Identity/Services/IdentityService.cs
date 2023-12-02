@@ -76,7 +76,7 @@ public sealed class IdentityService : IIdentityService
         await transaction.CommitAsync(cancellationToken);
     }
 
-    public async Task<JwtWebToken> SignIn(string email, string password, CancellationToken cancellationToken)
+    public async Task<JsonWebToken> SignIn(string email, string password, CancellationToken cancellationToken)
     {
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email != null && x.Email.Equals(email),
                        cancellationToken)

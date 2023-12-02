@@ -31,7 +31,7 @@ public static class IdentityExtension
             options.Password.RequireNonAlphanumeric = true;
 
             options.User.RequireUniqueEmail = true;
-            options.SignIn.RequireConfirmedEmail = false; //TODO do zmiany na true jak będą maile
+            options.SignIn.RequireConfirmedEmail = false;
 
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
             options.Lockout.MaxFailedAccessAttempts = 5;

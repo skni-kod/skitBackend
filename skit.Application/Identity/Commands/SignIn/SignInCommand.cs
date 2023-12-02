@@ -5,4 +5,4 @@ namespace skit.Application.Identity.Commands.SignIn;
 
 public sealed record SignInCommand(
     string Email,
-    string Password) : IRequest<JwtWebToken>;
+    string Password) : IRequest<JsonWebToken>;
