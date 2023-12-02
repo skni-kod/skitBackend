@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 using skit.Core.Offers.Enums;
 using skit.Core.Salaries.Enums;
 using skit.Shared.Responses;
@@ -12,8 +13,8 @@ public sealed class CreateOfferCommand : IRequest<CreateOrUpdateResponse>
     public DateTimeOffset? DateFrom { get; set; }
     public DateTimeOffset? DateTo { get; set; }
     public OfferStatus Status { get; set; }
-    public OfferSeniority Seniority { get; set; }
-    public OfferWorkLocation WorkLocation { get; set; }
+    public List<OfferSeniority> Seniorities { get; set; } = new();
+    public List<OfferWorkLocation> WorkLocations { get; set; } = new();
     public List<CreateOfferSalaries> Salaries { get; set; } = new();
     public List<Guid> AddressIds { get; set; } = new();
 }
