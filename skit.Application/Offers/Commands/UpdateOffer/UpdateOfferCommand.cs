@@ -10,8 +10,8 @@ public sealed record UpdateOfferCommand(
     DateTimeOffset? DateFrom,
     DateTimeOffset? DateTo,
     OfferStatus Status,
-    OfferSeniority Seniority,
-    OfferWorkLocation WorkLocation,
+    List<OfferSeniority> Seniorities,
+    List<OfferWorkLocation> WorkLocations,
     List<UpdateOfferSalaries> Salaries,
     List<Guid> AddressIds) : IRequest
 {

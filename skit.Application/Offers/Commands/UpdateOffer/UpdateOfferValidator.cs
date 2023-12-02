@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using skit.Core.Offers.Enums;
 
 namespace skit.Application.Offers.Commands.UpdateOffer;
 
@@ -15,13 +16,33 @@ public class UpdateOfferValidator : AbstractValidator<UpdateOfferCommand>
 
         RuleFor(command => command.Status)
             .IsInEnum();
-        
-        RuleFor(command => command.Seniority)
-            .IsInEnum();
-        
-        RuleFor(command => command.WorkLocation)
-            .IsInEnum();
-        
+
+        RuleFor(command => command.Seniorities)
+            .NotEmpty();
+
+        RuleForEach(command => command.Seniorities)
+            .NotEmpty()
+            .Custom((seniority, ctx) =>
+            {
+                if (!Enum.IsDefined(typeof(OfferSeniority), seniority))
+                {
+                    ctx.AddFailure($"Invalid seniority value: {seniority}");
+                }
+            });
+
+        RuleFor(command => command.WorkLocations)
+            .NotEmpty();
+
+        RuleForEach(command => command.WorkLocations)
+            .NotEmpty()
+            .Custom((workLocation, ctx) =>
+            {
+                if (!Enum.IsDefined(typeof(OfferWorkLocation), workLocation))
+                {
+                    ctx.AddFailure($"Invalid work location value: {workLocation}");
+                }
+            });
+
         RuleForEach(command => command.Salaries).ChildRules(salary =>
         {
             salary.RuleFor(s => s.EmploymentType)
@@ -34,8 +55,5 @@ public class UpdateOfferValidator : AbstractValidator<UpdateOfferCommand>
 
         RuleFor(command => command.AddressIds)
             .Must(collection => collection.Count > 0);
-
-        RuleForEach(command => command.AddressIds)
-            .NotEmpty();
     }
 }

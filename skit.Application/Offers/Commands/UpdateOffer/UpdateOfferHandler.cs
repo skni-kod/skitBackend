@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using skit.Core.Addresses.Exceptions;
 using skit.Core.Addresses.Repositories;
+using skit.Core.Common.Extensions;
 using skit.Core.Common.Services;
 using skit.Core.Offers.Exceptions;
 using skit.Core.Offers.Repositories;
@@ -52,14 +53,17 @@ internal sealed class UpdateOfferHandler : IRequestHandler<UpdateOfferCommand>
             salaries.Add(Salary.Create(salary.SalaryFrom, salary.SalaryTo, salary.EmploymentType));
         }
 
+        var seniority = command.Seniorities.AggregateToFlag();
+        var workLocations = command.WorkLocations.AggregateToFlag();
+        
         offer.Update(
             command.Title,
             command.Description,
             command.DateFrom,
             command.DateTo,
             command.Status,
-            command.Seniority,
-            command.WorkLocation,
+            seniority,
+            workLocations,
             salaries,
             addresses
         );
