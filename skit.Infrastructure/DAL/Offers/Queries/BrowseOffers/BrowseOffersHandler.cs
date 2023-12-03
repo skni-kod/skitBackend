@@ -34,6 +34,7 @@ internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, B
             .Include(offer => offer.Addresses)
             .Include(offer => offer.Salaries)
             .Include(offer => offer.Company)
+            .Include(offer => offer.Technologies)
             .Select(offer => offer.AsDto())
             .ToPaginatedListAsync(query);
 
