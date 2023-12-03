@@ -19,6 +19,7 @@ internal sealed class OfferRepository : IOfferRepository
         => await _offers
             .Include(offer => offer.Salaries)
             .Include(offer => offer.Addresses)
+            .Include(offer => offer.Technologies)
             .SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
 
         public async Task AddAsync(Offer offer, CancellationToken cancellationToken)

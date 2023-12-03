@@ -13,7 +13,8 @@ public sealed record UpdateOfferCommand(
     List<OfferSeniority> Seniorities,
     List<OfferWorkLocation> WorkLocations,
     List<UpdateOfferSalaries> Salaries,
-    List<Guid> AddressIds) : IRequest
+    List<Guid> AddressIds,
+    List<Guid> TechnologyIds) : IRequest
 {
     internal Guid OfferId { get; set; }
 }

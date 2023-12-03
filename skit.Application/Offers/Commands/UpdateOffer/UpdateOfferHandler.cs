@@ -7,6 +7,8 @@ using skit.Core.Offers.Exceptions;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Entities;
 using skit.Core.Salaries.Exceptions;
+using skit.Core.Technologies.Exceptions;
+using skit.Core.Technologies.Repositories;
 
 namespace skit.Application.Offers.Commands.UpdateOffer;
 
@@ -14,13 +16,15 @@ internal sealed class UpdateOfferHandler : IRequestHandler<UpdateOfferCommand>
 {
     private readonly IOfferRepository _offerRepository;
     private readonly IAddressRepository _addressRepository;
+    private readonly ITechnologyRepository _technologyRepository;
     private readonly ICurrentUserService _currentUserService;
 
-    public UpdateOfferHandler(IOfferRepository offerRepository, IAddressRepository addressRepository, ICurrentUserService currentUserService)
+    public UpdateOfferHandler(IOfferRepository offerRepository, IAddressRepository addressRepository, ICurrentUserService currentUserService, ITechnologyRepository technologyRepository)
     {
         _offerRepository = offerRepository;
         _addressRepository = addressRepository;
         _currentUserService = currentUserService;
+        _technologyRepository = technologyRepository;
     }
 
     public async Task Handle(UpdateOfferCommand command, CancellationToken cancellationToken)
@@ -46,6 +50,11 @@ internal sealed class UpdateOfferHandler : IRequestHandler<UpdateOfferCommand>
         if (addresses.Count != command.AddressIds.Count)
             throw new AddressNotFoundException();
         
+        var technologies = await _technologyRepository.GetFromIdsListAsync(command.TechnologyIds, cancellationToken);
+
+        if (technologies.Count != command.TechnologyIds.Count)
+            throw new TechnologyNotFoundException();
+        
         var salaries = new List<Salary>();
         
         foreach (var salary in command.Salaries)
@@ -65,7 +74,8 @@ internal sealed class UpdateOfferHandler : IRequestHandler<UpdateOfferCommand>
             seniority,
             workLocations,
             salaries,
-            addresses
+            addresses,
+            technologies
         );
 
         await _offerRepository.UpdateAsync(offer, cancellationToken);
