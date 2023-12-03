@@ -3,6 +3,7 @@ using skit.Core.Companies.Entities;
 using skit.Core.JobApplications.Entities;
 using skit.Core.Offers.Enums;
 using skit.Core.Salaries.Entities;
+using skit.Core.Technologies.Entities;
 using skit.Shared.Abstractions.Entities;
 
 namespace skit.Core.Offers.Entities;
@@ -26,6 +27,8 @@ public sealed class Offer : Entity
     public IReadOnlyCollection<Salary> Salaries => _salaries;
     private List<JobApplication> _jobApplications = new();
     public IReadOnlyCollection<JobApplication> JobApplications => _jobApplications;
+    private List<Technology> _technologies = new();
+    public IReadOnlyCollection<Technology> Technologies => _technologies;
 
     private Offer()
     {
@@ -41,7 +44,8 @@ public sealed class Offer : Entity
         OfferWorkLocation workLocation,
         Guid companyId,
         List<Salary> salaries,
-        List<Address> addresses)
+        List<Address> addresses,
+        List<Technology> technologies)
     {
         Title = title;
         Description = description;
@@ -53,6 +57,7 @@ public sealed class Offer : Entity
         CompanyId = companyId;
         _salaries = salaries;
         _addresses = addresses;
+        _technologies = technologies;
     }
 
     public static Offer Create(
@@ -65,8 +70,9 @@ public sealed class Offer : Entity
         OfferWorkLocation workLocation,
         Guid companyId,
         List<Salary> salaries,
-        List<Address> addresses) =>
-        new(title, description, dateFrom, dateTo, status, seniority, workLocation, companyId, salaries, addresses);
+        List<Address> addresses,
+        List<Technology> technologies) =>
+        new(title, description, dateFrom, dateTo, status, seniority, workLocation, companyId, salaries, addresses, technologies);
 
     public void Update(
         string title,
@@ -77,7 +83,8 @@ public sealed class Offer : Entity
         OfferSeniority seniority,
         OfferWorkLocation workLocation,
         List<Salary> salaries,
-        List<Address> addresses)
+        List<Address> addresses,
+        List<Technology> technologies)
     {
         Title = title;
         Description = description;
@@ -88,5 +95,6 @@ public sealed class Offer : Entity
         WorkLocation = workLocation;
         _salaries = salaries;
         _addresses = addresses;
+        _technologies = technologies;
     }
 }

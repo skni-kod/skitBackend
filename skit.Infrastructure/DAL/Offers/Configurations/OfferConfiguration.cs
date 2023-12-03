@@ -13,6 +13,11 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
             .WithMany(x => x.Offers)
             .UsingEntity("OffersAddresses");
         
+        builder
+            .HasMany(x => x.Technologies)
+            .WithMany(x => x.Offers)
+            .UsingEntity("OffersTechnologies");
+        
         builder.HasQueryFilter(x => x.DeletedById == null);
     }
 }

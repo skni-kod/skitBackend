@@ -10,11 +10,13 @@ using skit.Core.Identity.Entities;
 using skit.Core.JobApplications.Entities;
 using skit.Core.Offers.Entities;
 using skit.Core.Salaries.Entities;
+using skit.Core.Technologies.Entities;
 using skit.Infrastructure.DAL.Addresses.Configurations;
 using skit.Infrastructure.DAL.Companies.Configurations;
 using skit.Infrastructure.DAL.JobApplications.Configurations;
 using skit.Infrastructure.DAL.Offers.Configurations;
 using skit.Infrastructure.DAL.Salaries.Configurations;
+using skit.Infrastructure.DAL.Technologies.Configurations;
 using skit.Shared.Abstractions.Entities;
 
 namespace skit.Infrastructure.DAL.EF.Context;
@@ -29,6 +31,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
     public DbSet<Company> Companies { get; set; }
     public DbSet<Offer> Offers { get; set; }
     public DbSet<Salary> Salaries { get; set; }
+    public DbSet<Technology> Technologies { get; set; }
 
     private readonly Guid _userId = Guid.Empty;
     
@@ -49,6 +52,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
         modelBuilder.ApplyConfiguration(new JobApplicationConfiguration());
         modelBuilder.ApplyConfiguration(new OfferConfiguration());
         modelBuilder.ApplyConfiguration(new SalaryConfiguration());
+        modelBuilder.ApplyConfiguration(new TechnologyConfiguration());
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
