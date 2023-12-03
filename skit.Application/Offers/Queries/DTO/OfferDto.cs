@@ -13,16 +13,3 @@ public sealed class OfferDto
     public List<SalaryDto> Salaries { get; set; }
     public List<TechnologyDto> Technologies { get; set; }
 }
-
-public sealed class SalaryDto
-{
-    public decimal SalaryFrom { get; set; }
-    public decimal? SalaryTo { get; set; }
-    public SalaryEmploymentType EmploymentType { get; set; }
-}
-
-public sealed class TechnologyDto
-{
-    public string Name { get; set; }
-    public string? ThumUrl { get; set; }
-}

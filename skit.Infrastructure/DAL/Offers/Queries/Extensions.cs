@@ -37,7 +37,40 @@ internal static class Extensions
         };
     }
     
-    public static SalaryDto AsDto(this Salary salary)
+    public static OfferDetailsDto AsDetailsDto(this Offer offer)
+    {
+         var salaries = new List<SalaryDto>();
+        
+         foreach (var salary in offer.Salaries)
+         {
+             salaries.Add(salary.AsDto());
+         }
+        
+         var technologies = new List<TechnologyDto>();
+        
+         foreach (var technology in offer.Technologies)
+         {
+             technologies.Add(technology.AsDto());
+         }
+        
+         return new OfferDetailsDto
+         {
+             Title = offer.Title,
+             Description = offer.Description, 
+             DateFrom = offer.DateFrom, 
+             DateTo = offer.DateTo,
+             Seniorities = offer.Seniority.GetValuesFromFlag(),
+             WorkLocation = offer.WorkLocation.GetValuesFromFlag(),
+             CompanyName = offer.Company.Name,
+             CompanyDescription = offer.Company.Description,
+             CompanyId = offer.CompanyId,
+             Cities = offer.Addresses.Select(address => address.City).ToList(),
+             Salaries = salaries,
+             Technologies = technologies
+         };
+    }
+    
+    private static SalaryDto AsDto(this Salary salary)
     {
         return new SalaryDto
         {
@@ -47,7 +80,7 @@ internal static class Extensions
         };
     }
     
-    public static TechnologyDto AsDto(this Technology technology)
+    private static TechnologyDto AsDto(this Technology technology)
     {
         return new TechnologyDto
         {

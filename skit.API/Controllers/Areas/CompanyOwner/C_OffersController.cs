@@ -4,7 +4,7 @@ using skit.Application.Offers.Commands.CreateOffer;
 using skit.Application.Offers.Commands.DeleteOffer;
 using skit.Application.Offers.Commands.UpdateOffer;
 using skit.Application.Offers.Queries.BrowseOffers;
-using skit.Application.Offers.Queries.BrowseOffers.DTO;
+using skit.Application.Offers.Queries.GetOffer;
 using skit.Core.Identity.Static;
 using skit.Shared.Responses;
 
@@ -16,9 +16,19 @@ public class C_OffersController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<BrowseOffersDto>> BrowseOffers([FromQuery] BrowseOffersQuery query, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<BrowseOffersResponse>> BrowseOffers([FromQuery] BrowseOffersQuery query, CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(query, cancellationToken);
+
+        return Ok(response);
+    }
+    
+    [HttpGet("{offerId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<GetOfferResponse>> GetOffer([FromRoute] Guid offerId, CancellationToken cancellationToken = default)
+    {
+        var response = await Mediator.Send(new GetOfferQuery(offerId), cancellationToken);
 
         return Ok(response);
     }

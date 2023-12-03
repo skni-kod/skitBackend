@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using skit.Application.Offers.Queries.BrowseOffers;
-using skit.Application.Offers.Queries.BrowseOffers.DTO;
 using skit.Core.Companies.Entities;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Abstractions;
@@ -9,7 +8,7 @@ using skit.Shared.Abstractions.Extensions;
 
 namespace skit.Infrastructure.DAL.Offers.Queries.BrowseOffers;
 
-internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, BrowseOffersDto>
+internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, BrowseOffersResponse>
 {
     private readonly EFContext _context;
 
@@ -18,7 +17,7 @@ internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, B
         _context = context;
     }
 
-    public async Task<BrowseOffersDto> Handle(BrowseOffersQuery query, CancellationToken cancellationToken)
+    public async Task<BrowseOffersResponse> Handle(BrowseOffersQuery query, CancellationToken cancellationToken)
     {
         var offers = _context.Offers.AsNoTracking();
 
@@ -38,6 +37,6 @@ internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, B
             .Select(offer => offer.AsDto())
             .ToPaginatedListAsync(query);
 
-        return new BrowseOffersDto(result);
+        return new BrowseOffersResponse(result);
     }
 }
