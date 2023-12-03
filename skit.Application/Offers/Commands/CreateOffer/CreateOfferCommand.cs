@@ -17,6 +17,7 @@ public sealed class CreateOfferCommand : IRequest<CreateOrUpdateResponse>
     public List<OfferWorkLocation> WorkLocations { get; set; } = new();
     public List<CreateOfferSalaries> Salaries { get; set; } = new();
     public List<Guid> AddressIds { get; set; } = new();
+    public List<Guid> TechnologyIds { get; set; } = new();
 }
 
 public sealed record CreateOfferSalaries(decimal SalaryFrom, decimal? SalaryTo, SalaryEmploymentType EmploymentType);

@@ -54,6 +54,9 @@ public class CreateOfferValidator : AbstractValidator<CreateOfferCommand>
         });
 
         RuleFor(command => command.AddressIds)
-            .Must(collection => collection.Count > 0);
+            .NotEmpty();
+        
+        RuleFor(command => command.TechnologyIds)
+            .NotEmpty();
     }
 }

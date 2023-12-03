@@ -7,6 +7,8 @@ using skit.Core.Offers.Entities;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Entities;
 using skit.Core.Salaries.Exceptions;
+using skit.Core.Technologies.Exceptions;
+using skit.Core.Technologies.Repositories;
 using skit.Shared.Responses;
 
 namespace skit.Application.Offers.Commands.CreateOffer;
@@ -15,13 +17,15 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
 {
     private readonly IOfferRepository _offerRepository;
     private readonly IAddressRepository _addressRepository;
+    private readonly ITechnologyRepository _technologyRepository;
     private readonly ICurrentUserService _currentUserService;
 
-    public CreateOfferHandler(IOfferRepository offerRepository, IAddressRepository addressRepository, ICurrentUserService currentUserService)
+    public CreateOfferHandler(IOfferRepository offerRepository, IAddressRepository addressRepository, ICurrentUserService currentUserService, ITechnologyRepository technologyRepository)
     {
         _offerRepository = offerRepository;
         _addressRepository = addressRepository;
         _currentUserService = currentUserService;
+        _technologyRepository = technologyRepository;
     }
 
     public async Task<CreateOrUpdateResponse> Handle(CreateOfferCommand command, CancellationToken cancellationToken)
@@ -42,6 +46,11 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
         if (addresses.Count != command.AddressIds.Count)
             throw new AddressNotFoundException();
         
+        var technologies = await _technologyRepository.GetFromIdsListAsync(command.TechnologyIds, cancellationToken);
+
+        if (technologies.Count != command.TechnologyIds.Count)
+            throw new TechnologyNotFoundException();
+        
         var salaries = new List<Salary>();
         
         foreach (var salary in command.Salaries)
@@ -51,7 +60,7 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
         
         var seniority = command.Seniorities.AggregateToFlag();
         var workLocations = command.WorkLocations.AggregateToFlag();
-        
+
         var offer = Offer.Create(
             command.Title,
             command.Description,
@@ -62,7 +71,9 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
             workLocations,
             _currentUserService.CompanyId,
             salaries,
-            addresses);
+            addresses,
+            technologies
+        );
 
         await _offerRepository.AddAsync(offer, cancellationToken);
         
