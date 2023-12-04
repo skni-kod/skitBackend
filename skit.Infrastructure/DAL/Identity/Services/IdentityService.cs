@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using skit.Core.Common.Services;
 using skit.Core.Companies.Entities;
 using skit.Core.Companies.Exceptions;
 using skit.Core.Identity.DTO;
@@ -17,13 +19,17 @@ public sealed class IdentityService : IIdentityService
     private readonly EFContext _context;
     private readonly SignInManager<User> _signInManager;
     private readonly ITokenService _tokenService;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IDateService _dateService;
 
-    public IdentityService(UserManager<User> userManager, EFContext context, SignInManager<User> signInManager, ITokenService tokenService)
+    public IdentityService(UserManager<User> userManager, EFContext context, SignInManager<User> signInManager, ITokenService tokenService, ICurrentUserService currentUserService, IDateService dateService)
     {
         _userManager = userManager;
         _context = context;
         _signInManager = signInManager;
         _tokenService = tokenService;
+        _currentUserService = currentUserService;
+        _dateService = dateService;
     }
     
     public async Task SignUpCompany(string email, string companyName, string password, CancellationToken cancellationToken)
@@ -91,7 +97,68 @@ public sealed class IdentityService : IIdentityService
         var claims = await _userManager.GetClaimsAsync(user);
 
         var jwt = await _tokenService.GenerateAccessToken(user.Id, user.Email!, roles, claims);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        jwt.RefreshToken = refreshToken;
+        
+        DeleteExpiredRefreshTokens(user);
+        user.AddRefreshToken(refreshToken);
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return jwt;
+    }
+    
+    public async Task SignOut(string? refreshToken, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users
+                       .Include(x => x.RefreshTokens)
+                       .SingleOrDefaultAsync(x => x.Id == _currentUserService.UserId, cancellationToken)
+                   ?? throw new UserNotFoundException();
+
+        var token = user.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
+        user.DeleteRefreshToken(token);
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _signInManager.SignOutAsync();
+    }
+
+    public async Task<JsonWebToken> RefreshToken(string? refreshToken, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users
+                       .Include(x => x.RefreshTokens)
+                       .SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken), cancellationToken)
+                   ?? throw new InvalidRefreshTokenException();
+
+        var currentRefreshToken = user.RefreshTokens.Single(x => x.Token == refreshToken);
+
+        if (currentRefreshToken.IsExpired)
+            throw new InvalidRefreshTokenException();
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var claims = await _userManager.GetClaimsAsync(user);
+
+        var jwt = await _tokenService.GenerateAccessToken(user.Id, user.Email!, roles, claims);
+        var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+        jwt.RefreshToken = newRefreshToken;
+        
+        user.DeleteRefreshToken(currentRefreshToken);
+        user.AddRefreshToken(newRefreshToken);
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return jwt;
+    }
+
+    private void DeleteExpiredRefreshTokens(User user)
+    {
+        var expiredTokens = user.RefreshTokens.Where(token => token.IsExpired).ToList();
+        foreach (var token in expiredTokens)
+        {
+            if(token.IsExpired)
+                user.DeleteRefreshToken(token);
+        }
     }
 }

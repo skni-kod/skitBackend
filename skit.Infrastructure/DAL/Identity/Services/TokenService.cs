@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using skit.Core.Common.Services;
@@ -72,5 +73,16 @@ public sealed class TokenService : ITokenService
             Roles = roles,
             Claims = claims?.ToDictionary(x => x.Type, x => x.Value)
         };
+    }
+
+    public RefreshToken GenerateRefreshToken()
+    {
+        var refreshToken = new RefreshToken
+        {
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Expires = _dateService.CurrentDate().AddDays(_authConfig.RefreshTokenTTL)
+        };
+
+        return refreshToken;
     }
 }
