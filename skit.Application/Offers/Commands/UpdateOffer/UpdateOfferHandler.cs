@@ -34,6 +34,9 @@ internal sealed class UpdateOfferHandler : IRequestHandler<UpdateOfferCommand>
         if (offer == null)
             throw new OfferNotFoundException();
         
+        if (offer.CompanyId != _currentUserService.CompanyId)
+            throw new OfferForbiddenException();
+        
         if(command.Salaries.Any())
         {
             var isSingleEmploymentTypes = command.Salaries

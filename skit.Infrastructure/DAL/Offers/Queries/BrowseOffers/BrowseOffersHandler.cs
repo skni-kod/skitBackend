@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using skit.Application.Offers.Queries.BrowseOffers;
+using skit.Core.Common.Services;
 using skit.Core.Companies.Entities;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Abstractions;
@@ -11,15 +12,17 @@ namespace skit.Infrastructure.DAL.Offers.Queries.BrowseOffers;
 internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, BrowseOffersResponse>
 {
     private readonly EFContext _context;
+    private readonly ICurrentUserService _currentUserService;
 
-    public BrowseOffersHandler(EFContext context)
+    public BrowseOffersHandler(EFContext context, ICurrentUserService currentUserService)
     {
         _context = context;
+        _currentUserService = currentUserService;
     }
 
     public async Task<BrowseOffersResponse> Handle(BrowseOffersQuery query, CancellationToken cancellationToken)
     {
-        var offers = _context.Offers.AsNoTracking();
+        var offers = _context.Offers.AsNoTracking().Where(offer => offer.CompanyId == _currentUserService.CompanyId);
 
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
