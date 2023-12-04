@@ -30,6 +30,7 @@ internal static class Extensions
         
         return new OfferDto
         {
+            Id = offer.Id,
             Title = offer.Title,
             CompanyName = offer.Company.Name,
             WorkLocation = offer.WorkLocation.GetValuesFromFlag(),
@@ -57,6 +58,7 @@ internal static class Extensions
         
          return new OfferDetailsDto
          {
+             Id = offer.Id,
              Title = offer.Title,
              Description = offer.Description, 
              DateFrom = offer.DateFrom, 
@@ -83,6 +85,7 @@ internal static class Extensions
 
         return new GetOfferForUpdateDto
         { 
+            Id = offer.Id,
             Title = offer.Title,
             Description  = offer.Description,
             DateFrom = offer.DateFrom,

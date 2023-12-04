@@ -6,6 +6,7 @@ namespace skit.Application.Offers.Queries.DTO;
 
 public sealed class OfferDto
 {
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public string CompanyName { get; set; }
     public List<OfferWorkLocation> WorkLocation { get; set; }

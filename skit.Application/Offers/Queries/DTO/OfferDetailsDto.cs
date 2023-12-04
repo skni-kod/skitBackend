@@ -4,6 +4,7 @@ namespace skit.Application.Offers.Queries.DTO;
 
 public sealed class OfferDetailsDto
 {
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public string? Description { get; set; }
     public DateTimeOffset? DateFrom { get; set; }
