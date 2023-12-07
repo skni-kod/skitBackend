@@ -32,7 +32,7 @@ public sealed class IdentityService : IIdentityService
         _dateService = dateService;
     }
     
-    public async Task SignUpCompany(string email, string companyName, string password, CancellationToken cancellationToken)
+    public async Task<Guid> SignUpCompany(string email, string companyName, string password, CancellationToken cancellationToken)
     {
         var userEmailIsNotUnique = await _userManager.Users.AnyAsync(x => x.Email == email, cancellationToken);
         
@@ -80,6 +80,8 @@ public sealed class IdentityService : IIdentityService
             throw new AddClaimException();
         
         await transaction.CommitAsync(cancellationToken);
+
+        return user.Id;
     }
 
     public async Task<JsonWebToken> SignIn(string email, string password, CancellationToken cancellationToken)
@@ -150,6 +152,32 @@ public sealed class IdentityService : IIdentityService
         await _context.SaveChangesAsync(cancellationToken);
         
         return jwt;
+    }
+
+    public async Task<ResetPasswordTokenDto> GeneratePasswordResetTokenAsync(string email, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.AsNoTracking()
+                       .Where(x => x.Email == email)
+                       .FirstOrDefaultAsync(cancellationToken)
+                   ?? throw new UserNotFoundException();
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        return new ResetPasswordTokenDto
+        {
+            Token = token,
+            UserId = user.Id
+        };
+    }
+
+    public async Task<User?> GetAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<string> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken)
+    {
+        return await _userManager.GenerateEmailConfirmationTokenAsync(user);
     }
 
     private void DeleteExpiredRefreshTokens(User user)

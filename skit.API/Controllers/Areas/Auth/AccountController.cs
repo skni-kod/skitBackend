@@ -6,6 +6,7 @@ using skit.Application.Identity.Commands.RefreshToken;
 using skit.Application.Identity.Commands.SignIn;
 using skit.Application.Identity.Commands.SignOut;
 using skit.Application.Identity.Commands.SignUpCompany;
+using skit.Application.Identity.Events.SendConfirmAccountEmail;
 using skit.Core.Identity.DTO;
 using skit.Core.Identity.Static;
 
@@ -54,6 +55,16 @@ public sealed class AccountController : BaseController
         var result = await Mediator.Send(new RefreshTokenCommand(refreshToken), cancellationToken);
         SetRefreshTokenCookie(result.RefreshToken);
         return Ok(result);
+    }
+
+    [HttpPost("confirm-account")]
+    [ApiAuthorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SendConfirmAccountEmail(CancellationToken cancellationToken)
+    {
+        await Mediator.Publish(new SendConfirmAccountEmailEvent(), cancellationToken);
+        return Ok();
     }
     
     private void SetRefreshTokenCookie(RefreshToken refreshToken)

@@ -4,6 +4,7 @@ using skit.API.Filters;
 using skit.Application;
 using skit.Core;
 using skit.Infrastructure;
+using skit.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddApplication();
 builder.Services.AddCore();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+Globals.ApplicationUrl = builder.Configuration.GetValue<string>("ApplicationConfig:ApplicationUrl");
 
 var app = builder.Build();
 
