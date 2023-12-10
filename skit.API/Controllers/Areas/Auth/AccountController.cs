@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using skit.API.Attributes;
 using skit.API.Common;
+using skit.Application.Identity.Commands.ConfirmAccount;
 using skit.Application.Identity.Commands.RefreshToken;
+using skit.Application.Identity.Commands.ResetPassword;
 using skit.Application.Identity.Commands.SignIn;
 using skit.Application.Identity.Commands.SignOut;
 using skit.Application.Identity.Commands.SignUpCompany;
 using skit.Application.Identity.Events.SendConfirmAccountEmail;
+using skit.Application.Identity.Events.SendResetPasswordEmail;
 using skit.Core.Identity.DTO;
 using skit.Core.Identity.Static;
 
@@ -57,13 +60,41 @@ public sealed class AccountController : BaseController
         return Ok(result);
     }
 
-    [HttpPost("confirm-account")]
+    [HttpPost("send-confirm-account-request")]
     [ApiAuthorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> SendConfirmAccountEmail(CancellationToken cancellationToken)
     {
         await Mediator.Publish(new SendConfirmAccountEmailEvent(), cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPost("confirm-account")]
+    [ApiAuthorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ConfirmAccount([FromBody] ConfirmAccountCommand command, CancellationToken cancellationToken)
+    {
+        await Mediator.Send(command, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPost("send-reset-password-request")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SendResetPasswordEmail([FromBody] SendResetPasswordEmailEvent @event, CancellationToken cancellationToken)
+    {
+        await Mediator.Publish(@event, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
+    {
+        await Mediator.Send(command, cancellationToken);
         return Ok();
     }
     

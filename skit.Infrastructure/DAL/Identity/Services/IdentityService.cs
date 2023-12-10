@@ -180,6 +180,26 @@ public sealed class IdentityService : IIdentityService
         return await _userManager.GenerateEmailConfirmationTokenAsync(user);
     }
 
+    public async Task ConfirmAccountAsync(Guid userId, string token, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken)
+                   ?? throw new ConfirmAccountException();
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+            throw new ConfirmAccountException();
+    }
+
+    public async Task ResetPasswordAsync(Guid userId, string token, string password, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken)
+                   ?? throw new ConfirmAccountException();
+        
+        var result = await _userManager.ResetPasswordAsync(user, token, password);
+        if (!result.Succeeded)
+            throw new ChangePasswordException(result.Errors);
+    }
+
     private void DeleteExpiredRefreshTokens(User user)
     {
         var expiredTokens = user.RefreshTokens.Where(token => token.IsExpired).ToList();

@@ -12,4 +12,6 @@ public interface IIdentityService
     Task<ResetPasswordTokenDto> GeneratePasswordResetTokenAsync(string email, CancellationToken cancellationToken);
     Task<User?> GetAsync(Guid id, CancellationToken cancellationToken);
     Task<string> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken);
+    Task ConfirmAccountAsync(Guid userId, string token, CancellationToken cancellationToken);
+    Task ResetPasswordAsync(Guid userId, string token, string password, CancellationToken cancellationToken);
 }
