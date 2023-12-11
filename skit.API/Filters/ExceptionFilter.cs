@@ -14,6 +14,7 @@ public class ExceptionFilter : ExceptionFilterAttribute
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
         {
             { typeof(CreateUserException), HandleCreateUserException },
+            { typeof(ChangePasswordException), HandleChangePasswordException },
         };
     }
     
@@ -59,8 +60,21 @@ public class ExceptionFilter : ExceptionFilterAttribute
     private void HandleCreateUserException(ExceptionContext context)
     {
         var exception = context.Exception as CreateUserException;
+        
+        var details = new ValidationProblemDetails(exception?.Errors)
+        {
+            Title = exception?.Message
+        };
 
+        context.Result = new BadRequestObjectResult(details);
 
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleChangePasswordException(ExceptionContext context)
+    {
+        var exception = context.Exception as ChangePasswordException;
+        
         var details = new ValidationProblemDetails(exception?.Errors)
         {
             Title = exception?.Message
