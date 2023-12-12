@@ -9,7 +9,7 @@ using skit.Application.Offers.Queries.GetPublicOffer;
 namespace skit.API.Controllers.Areas.Public;
 
 [AllowAnonymous]
-[Route($"{Endpoints.BaseUrl}/offers/public")]
+[Route($"{Endpoints.BasePublicUrl}/offers")]
 public sealed class P_OffersController : BaseController
 {
     [HttpGet]
@@ -28,7 +28,7 @@ public sealed class P_OffersController : BaseController
     {
         var response = await Mediator.Send(new GetPublicOfferQuery(offerId), cancellationToken);
 
-        return Ok(response);
+        return OkOrNotFound(response);
     }
 
 }

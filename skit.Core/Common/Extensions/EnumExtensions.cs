@@ -13,9 +13,9 @@ public static class EnumExtensions
             .ToList();
     }
     
-    public static List<BaseEnum> GetObjectsFromFlag<TEnum>(this TEnum flagsEnum) where TEnum : Enum
+    public static List<BaseEnum?> GetObjectsFromFlag<TEnum>(this TEnum flagsEnum) where TEnum : Enum
     {
-        var result = new List<BaseEnum>();
+        var result = new List<BaseEnum?>();
 
         foreach (TEnum value in Enum.GetValues(typeof(TEnum)))
         {

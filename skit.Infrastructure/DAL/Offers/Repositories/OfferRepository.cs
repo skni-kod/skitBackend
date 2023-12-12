@@ -22,16 +22,18 @@ internal sealed class OfferRepository : IOfferRepository
             .Include(offer => offer.Technologies)
             .SingleOrDefaultAsync(offer => offer.Id == offerId, cancellationToken);
 
-        public async Task AddAsync(Offer offer, CancellationToken cancellationToken)
+    public async Task<Guid> AddAsync(Offer offer, CancellationToken cancellationToken)
     {
-        await _offers.AddAsync(offer, cancellationToken);
+        var result = await _offers.AddAsync(offer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+        return result.Entity.Id;
     }    
     
-    public async Task UpdateAsync(Offer offer, CancellationToken cancellationToken)
+    public async Task<Guid> UpdateAsync(Offer offer, CancellationToken cancellationToken)
     {
-        _offers.Update(offer);
+        var result = _offers.Update(offer);
         await _context.SaveChangesAsync(cancellationToken);
+        return result.Entity.Id;
     }
 
     public async Task DeleteAsync(Offer offer, CancellationToken cancellationToken)

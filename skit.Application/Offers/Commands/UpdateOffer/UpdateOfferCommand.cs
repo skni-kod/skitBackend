@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using skit.Core.Offers.Enums;
 using skit.Core.Salaries.Enums;
+using skit.Shared.Responses;
 
 namespace skit.Application.Offers.Commands.UpdateOffer;
 
@@ -14,7 +15,7 @@ public sealed record UpdateOfferCommand(
     List<OfferWorkLocation> WorkLocations,
     List<UpdateOfferSalaries> Salaries,
     List<Guid> AddressIds,
-    List<Guid> TechnologyIds) : IRequest
+    List<Guid> TechnologyIds) : IRequest<CreateOrUpdateResponse>
 {
     internal Guid OfferId { get; set; }
 }

@@ -2,4 +2,4 @@
 
 namespace skit.Application.Offers.Queries.GetOffer;
 
-public sealed record GetOfferResponse(OfferDetailsDto Offer);
+public sealed record GetOfferResponse(OfferDetailsDto? Offer);

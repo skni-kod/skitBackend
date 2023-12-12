@@ -22,26 +22,14 @@ public class UpdateOfferValidator : AbstractValidator<UpdateOfferCommand>
 
         RuleForEach(command => command.Seniorities)
             .NotEmpty()
-            .Custom((seniority, ctx) =>
-            {
-                if (!Enum.IsDefined(typeof(OfferSeniority), seniority))
-                {
-                    ctx.AddFailure($"Invalid seniority value: {seniority}");
-                }
-            });
+            .IsInEnum();
 
         RuleFor(command => command.WorkLocations)
             .NotEmpty();
 
         RuleForEach(command => command.WorkLocations)
             .NotEmpty()
-            .Custom((workLocation, ctx) =>
-            {
-                if (!Enum.IsDefined(typeof(OfferWorkLocation), workLocation))
-                {
-                    ctx.AddFailure($"Invalid work location value: {workLocation}");
-                }
-            });
+            .IsInEnum();
 
         RuleForEach(command => command.Salaries).ChildRules(salary =>
         {

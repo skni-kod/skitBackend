@@ -31,17 +31,17 @@ public class C_OffersController : BaseController
     {
         var response = await Mediator.Send(new GetOfferQuery(offerId), cancellationToken);
 
-        return Ok(response);
+        return OkOrNotFound(response);
     }
 
-    [HttpGet("update/{offerId:guid}")]
+    [HttpGet("{offerId:guid}/update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<GetOfferForUpdateResponse>> GetOfferForUpdate([FromRoute] Guid offerId, CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(new GetOfferForUpdateQuery(offerId), cancellationToken);
 
-        return Ok(response);
+        return OkOrNotFound(response);
     }
 
     [HttpPost]
@@ -58,13 +58,13 @@ public class C_OffersController : BaseController
     [HttpPut("{offerId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateOffer([FromRoute] Guid offerId, [FromBody] UpdateOfferCommand command,
+    public async Task<ActionResult<CreateOrUpdateResponse>> UpdateOffer([FromRoute] Guid offerId, [FromBody] UpdateOfferCommand command,
         CancellationToken cancellationToken = default)
     {
         command.OfferId = offerId;
-        await Mediator.Send(command, cancellationToken);
+        var response = await Mediator.Send(command, cancellationToken);
 
-        return Ok();
+        return Ok(response);
     }
     
     [HttpDelete("{offerId:guid}")]

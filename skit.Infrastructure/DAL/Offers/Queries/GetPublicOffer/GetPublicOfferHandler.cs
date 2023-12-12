@@ -7,7 +7,7 @@ using skit.Infrastructure.DAL.EF.Context;
 
 namespace skit.Infrastructure.DAL.Offers.Queries.GetPublicOffer;
 
-internal sealed class GetPublicOfferHandler : IRequestHandler<GetPublicOfferQuery, GetPublicOfferResponse>
+internal sealed class GetPublicOfferHandler : IRequestHandler<GetPublicOfferQuery, GetPublicOfferResponse?>
 {
     private readonly EFContext _context;
 
@@ -16,7 +16,7 @@ internal sealed class GetPublicOfferHandler : IRequestHandler<GetPublicOfferQuer
         _context = context;
     }
 
-    public async Task<GetPublicOfferResponse> Handle(GetPublicOfferQuery request, CancellationToken cancellationToken)
+    public async Task<GetPublicOfferResponse?> Handle(GetPublicOfferQuery request, CancellationToken cancellationToken)
     {
         var offer = await _context.Offers.AsNoTracking()
                         .Include(offer => offer.Addresses)
@@ -26,8 +26,7 @@ internal sealed class GetPublicOfferHandler : IRequestHandler<GetPublicOfferQuer
                         .Where(offer => offer.Status == OfferStatus.Public)
                         .Where(offer => offer.Id == request.OfferId)
                         .Select(offer => new GetPublicOfferResponse(offer.AsDetailsDto()))
-                        .SingleOrDefaultAsync(cancellationToken)
-                    ?? throw new OfferNotFoundException();
+                        .SingleOrDefaultAsync(cancellationToken);
 
         return offer;
     }

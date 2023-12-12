@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using skit.Core.Addresses.Exceptions;
 using skit.Core.Addresses.Repositories;
 using skit.Core.Common.Extensions;
 using skit.Core.Common.Services;
@@ -7,7 +6,6 @@ using skit.Core.Offers.Entities;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Entities;
 using skit.Core.Salaries.Exceptions;
-using skit.Core.Technologies.Exceptions;
 using skit.Core.Technologies.Repositories;
 using skit.Shared.Responses;
 
@@ -43,14 +41,8 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
         var addresses = await _addressRepository.GetFromIdsListForCompanyAsync(command.AddressIds,
             _currentUserService.CompanyId, cancellationToken);
 
-        if (addresses.Count != command.AddressIds.Count)
-            throw new AddressNotFoundException();
-        
         var technologies = await _technologyRepository.GetFromIdsListAsync(command.TechnologyIds, cancellationToken);
 
-        if (technologies.Count != command.TechnologyIds.Count)
-            throw new TechnologyNotFoundException();
-        
         var salaries = new List<Salary>();
         
         foreach (var salary in command.Salaries)
@@ -75,8 +67,8 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
             technologies
         );
 
-        await _offerRepository.AddAsync(offer, cancellationToken);
+        var offerId = await _offerRepository.AddAsync(offer, cancellationToken);
         
-        return new CreateOrUpdateResponse(offer.Id);
+        return new CreateOrUpdateResponse(offerId);
     }
 }
