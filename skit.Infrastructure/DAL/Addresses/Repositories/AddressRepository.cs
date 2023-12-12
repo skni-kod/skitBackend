@@ -26,6 +26,9 @@ public sealed class AddressRepository : IAddressRepository
     public async Task<Address?> GetAsync(Guid id, CancellationToken cancellationToken)
         => await _addresses.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public async Task<List<Address>> GetFromIdsListForCompanyAsync(List<Guid> ids, Guid companyId, CancellationToken cancellationToken)
+        => await _addresses.Where(x => ids.Contains(x.Id) && x.CompanyId == companyId).ToListAsync(cancellationToken);
+
     public async Task<Guid> UpdateAsync(Address address, CancellationToken cancellationToken)
     {
         var result = _addresses.Update(address);

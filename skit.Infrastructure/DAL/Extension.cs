@@ -6,10 +6,14 @@ using Microsoft.Extensions.Logging;
 using skit.Core.Addresses.Repositories;
 using skit.Core.Companies.Repositories;
 using skit.Core.Identity.Services;
+using skit.Core.Offers.Repositories;
+using skit.Core.Technologies.Repositories;
 using skit.Infrastructure.DAL.Addresses.Repositories;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Infrastructure.DAL.Identity.Services;
+using skit.Infrastructure.DAL.Offers.Repositories;
+using skit.Infrastructure.DAL.Technologies.Repositories;
 using skit.Infrastructure.Integrations.Emails.Configuration;
 
 namespace skit.Infrastructure.DAL;
@@ -32,6 +36,8 @@ internal static class Extension
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IOfferRepository, OfferRepository>();
+        services.AddScoped<ITechnologyRepository, TechnologyRepository>();
         
         return services;
     }

@@ -1,9 +1,8 @@
-﻿using System.Data;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace skit.Application.Companies.Commands.UpdateCompany;
 
-internal class UpdateCompanyValidator : AbstractValidator<UpdateCompanyCommand>
+public class UpdateCompanyValidator : AbstractValidator<UpdateCompanyCommand>
 {
     public UpdateCompanyValidator()
     {

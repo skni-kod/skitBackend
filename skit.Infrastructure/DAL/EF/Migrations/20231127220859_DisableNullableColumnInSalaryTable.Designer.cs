@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using skit.Infrastructure.DAL.EF.Context;
 
 #nullable disable
 
-namespace skit.Infrastructure.Migrations
+namespace skit.Infrastructure.DAL.EF.Migrations
 {
     [DbContext(typeof(EFContext))]
-    partial class EFContextModelSnapshot : ModelSnapshot
+    [Migration("20231127220859_DisableNullableColumnInSalaryTable")]
+    partial class DisableNullableColumnInSalaryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,21 +168,6 @@ namespace skit.Infrastructure.Migrations
                     b.HasIndex("OffersId");
 
                     b.ToTable("OffersAddresses");
-                });
-
-            modelBuilder.Entity("OffersTechnologies", b =>
-                {
-                    b.Property<Guid>("OffersId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TechnologiesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("OffersId", "TechnologiesId");
-
-                    b.HasIndex("TechnologiesId");
-
-                    b.ToTable("OffersTechnologies");
                 });
 
             modelBuilder.Entity("skit.Core.Addresses.Entities.Address", b =>
@@ -463,36 +451,6 @@ namespace skit.Infrastructure.Migrations
                     b.ToTable("Salaries");
                 });
 
-            modelBuilder.Entity("skit.Core.Technologies.Entities.Technology", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("DeletedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ThumUrl")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Technologies");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -559,21 +517,6 @@ namespace skit.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OffersTechnologies", b =>
-                {
-                    b.HasOne("skit.Core.Offers.Entities.Offer", null)
-                        .WithMany()
-                        .HasForeignKey("OffersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("skit.Core.Technologies.Entities.Technology", null)
-                        .WithMany()
-                        .HasForeignKey("TechnologiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("skit.Core.Addresses.Entities.Address", b =>
                 {
                     b.HasOne("skit.Core.Companies.Entities.Company", "Company")
@@ -591,33 +534,7 @@ namespace skit.Infrastructure.Migrations
                         .WithOne("Owner")
                         .HasForeignKey("skit.Core.Identity.Entities.User", "CompanyId");
 
-                    b.OwnsMany("skit.Core.Identity.Entities.UserRefreshToken", "RefreshTokens", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTimeOffset>("Expires")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<string>("Token")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.HasKey("UserId", "Id");
-
-                            b1.ToTable("UserRefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
                     b.Navigation("Company");
-
-                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("skit.Core.JobApplications.Entities.JobApplication", b =>
