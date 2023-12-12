@@ -66,6 +66,11 @@ public static class IdentityExtension
             options.ValidationInterval = TimeSpan.FromMinutes(30);
             options.OnRefreshingPrincipal = (context) => Task.CompletedTask;
         });
+        
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromHours(2); // Set the token lifespan to 2 days
+        });
 
         return services;
     }

@@ -3,6 +3,7 @@
 public sealed class JsonWebToken
 {
     public string AccessToken { get; init; }
+    public RefreshToken RefreshToken { get; set; }
     public long Expires { get; init; }
     public Guid UserId { get; init; }
     public string Email { get; set; }

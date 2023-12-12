@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using skit.Infrastructure.DAL.EF.Context;
 
 #nullable disable
 
-namespace skit.Infrastructure.Migrations
+namespace skit.Infrastructure.DAL.EF.Migrations
 {
     [DbContext(typeof(EFContext))]
-    partial class EFContextModelSnapshot : ModelSnapshot
+    [Migration("20231130160447_AddRefreshTokensInUser")]
+    partial class AddRefreshTokensInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,21 +168,6 @@ namespace skit.Infrastructure.Migrations
                     b.HasIndex("OffersId");
 
                     b.ToTable("OffersAddresses");
-                });
-
-            modelBuilder.Entity("OffersTechnologies", b =>
-                {
-                    b.Property<Guid>("OffersId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TechnologiesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("OffersId", "TechnologiesId");
-
-                    b.HasIndex("TechnologiesId");
-
-                    b.ToTable("OffersTechnologies");
                 });
 
             modelBuilder.Entity("skit.Core.Addresses.Entities.Address", b =>
@@ -444,13 +432,13 @@ namespace skit.Infrastructure.Migrations
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("EmploymentType")
+                    b.Property<int?>("EmploymentType")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("OfferId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("SalaryFrom")
+                    b.Property<decimal?>("SalaryFrom")
                         .HasColumnType("numeric");
 
                     b.Property<decimal?>("SalaryTo")
@@ -461,36 +449,6 @@ namespace skit.Infrastructure.Migrations
                     b.HasIndex("OfferId");
 
                     b.ToTable("Salaries");
-                });
-
-            modelBuilder.Entity("skit.Core.Technologies.Entities.Technology", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("DeletedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ThumUrl")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Technologies");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -555,21 +513,6 @@ namespace skit.Infrastructure.Migrations
                     b.HasOne("skit.Core.Offers.Entities.Offer", null)
                         .WithMany()
                         .HasForeignKey("OffersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OffersTechnologies", b =>
-                {
-                    b.HasOne("skit.Core.Offers.Entities.Offer", null)
-                        .WithMany()
-                        .HasForeignKey("OffersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("skit.Core.Technologies.Entities.Technology", null)
-                        .WithMany()
-                        .HasForeignKey("TechnologiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
