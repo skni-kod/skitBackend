@@ -24,8 +24,7 @@ namespace skit.Infrastructure.DAL.EF.Context;
 public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
     private readonly IDateService _dateService;
-    private readonly ICurrentUserService _currentUserService;
-    
+
     public DbSet<Address> Addresses { get; set; }
     public DbSet<JobApplication> JobApplications { get; set; }
     public DbSet<Company> Companies { get; set; }
@@ -37,10 +36,11 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
     
     public EFContext(DbContextOptions<EFContext> options) : base(options) {}
 
-    public EFContext(DbContextOptions<EFContext> options, IDateService dateService, ICurrentUserService currentUserService) : base(options)
+    public EFContext(DbContextOptions<EFContext> options, IDateService dateService, IHttpContextAccessor httpContextAccessor) : base(options)
     {
         _dateService = dateService;
-        _currentUserService = currentUserService;
+        _ = Guid.TryParse(httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier),
+            out _userId);
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.CurrentValues["CreatedById"] = _currentUserService.UserId;
+                        entry.CurrentValues["CreatedById"] = _userId;
                         entry.CurrentValues["CreatedAt"] = _dateService.CurrentOffsetDate();
                         entry.CurrentValues["DeletedById"] = null;
                         entry.CurrentValues["DeletedAt"] = null;
@@ -71,7 +71,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
                     
                     case EntityState.Deleted:
                         entry.State = EntityState.Modified;
-                        entry.CurrentValues["DeletedById"] = _currentUserService.UserId;
+                        entry.CurrentValues["DeletedById"] = _userId;
                         entry.CurrentValues["DeletedAt"] = _dateService.CurrentOffsetDate();
                         break;
                 }
