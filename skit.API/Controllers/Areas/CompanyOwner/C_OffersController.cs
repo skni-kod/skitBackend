@@ -15,6 +15,9 @@ namespace skit.API.Controllers.Areas.CompanyOwner;
 [ApiAuthorize(Roles = UserRoles.CompanyOwner)]
 public class C_OffersController : BaseController
 {
+    /// <summary>
+    /// Get company offers paginated list
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<BrowseOffersResponse>> BrowseOffers([FromQuery] BrowseOffersQuery query, CancellationToken cancellationToken = default)
@@ -24,6 +27,9 @@ public class C_OffersController : BaseController
         return Ok(response);
     }
     
+    /// <summary>
+    /// Get company offer by Id
+    /// </summary>
     [HttpGet("{offerId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -33,7 +39,10 @@ public class C_OffersController : BaseController
 
         return OkOrNotFound(response);
     }
-
+    
+    /// <summary>
+    /// Get company offer by Id for update
+    /// </summary>
     [HttpGet("{offerId:guid}/update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -44,6 +53,9 @@ public class C_OffersController : BaseController
         return OkOrNotFound(response);
     }
 
+    /// <summary>
+    /// Create offer
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,6 +67,9 @@ public class C_OffersController : BaseController
         return Ok(response);
     }
     
+    /// <summary>
+    /// Update offer by Id
+    /// </summary>
     [HttpPut("{offerId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -67,6 +82,9 @@ public class C_OffersController : BaseController
         return Ok(response);
     }
     
+    /// <summary>
+    /// Delete offer by Id
+    /// </summary>
     [HttpDelete("{offerId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

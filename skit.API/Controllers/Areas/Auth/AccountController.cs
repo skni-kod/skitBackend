@@ -18,6 +18,9 @@ namespace skit.API.Controllers.Areas.Auth;
 [Route($"{Endpoints.BaseUrl}/account")]
 public sealed class AccountController : BaseController
 {
+    /// <summary>
+    /// Sign up user and create company
+    /// </summary>
     [HttpPost("sign-up-company")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -28,6 +31,9 @@ public sealed class AccountController : BaseController
         return Created(string.Empty, result);
     }
 
+    /// <summary>
+    /// Sign in
+    /// </summary>
     [HttpPost("sign-in")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -38,6 +44,9 @@ public sealed class AccountController : BaseController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Sign out
+    /// </summary>
     [HttpPost("sign-out")]
     [ApiAuthorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -49,6 +58,9 @@ public sealed class AccountController : BaseController
         return Ok();
     }
 
+    /// <summary>
+    /// Refresh token
+    /// </summary>
     [HttpPost("refresh-token")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +72,9 @@ public sealed class AccountController : BaseController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Send email with confirm account link
+    /// </summary>
     [HttpPost("send-confirm-account-request")]
     [ApiAuthorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -70,6 +85,9 @@ public sealed class AccountController : BaseController
         return Ok();
     }
     
+    /// <summary>
+    /// Confirm account
+    /// </summary>
     [HttpPost("confirm-account")]
     [ApiAuthorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -80,6 +98,9 @@ public sealed class AccountController : BaseController
         return Ok();
     }
     
+    /// <summary>
+    /// Send email with reset password link
+    /// </summary>
     [HttpPost("send-reset-password-request")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -89,6 +110,9 @@ public sealed class AccountController : BaseController
         return Ok();
     }
     
+    /// <summary>
+    /// Reset password
+    /// </summary>
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

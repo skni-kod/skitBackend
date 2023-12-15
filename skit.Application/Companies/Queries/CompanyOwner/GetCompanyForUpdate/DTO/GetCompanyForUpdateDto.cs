@@ -1,6 +1,6 @@
 ﻿using skit.Core.Companies.Enums;
 
-namespace skit.Application.Companies.Queries.GetCompanyForUpdate.DTO;
+namespace skit.Application.Companies.Queries.CompanyOwner.GetCompanyForUpdate.DTO;
 
 public sealed class GetCompanyForUpdateDto
 {

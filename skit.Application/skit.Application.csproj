@@ -18,4 +18,9 @@
       <ProjectReference Include="..\skit.Shared\skit.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Companies\Queries\CompanyOwner\" />
+      <Folder Include="Companies\Queries\Public\" />
+    </ItemGroup>
+
 </Project>
