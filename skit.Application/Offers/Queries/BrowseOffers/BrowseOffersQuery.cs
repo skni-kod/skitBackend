@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using skit.Shared.Abstractions.Models;
+using skit.Shared.Models;
 
 namespace skit.Application.Offers.Queries.BrowseOffers;
 
