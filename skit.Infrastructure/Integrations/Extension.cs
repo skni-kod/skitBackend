@@ -15,8 +15,13 @@ internal static class Extension
 {
     public static IServiceCollection AddIntegrations(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<SmtpConfig>(configuration.GetSection("SMTP"));
-        services.Configure<S3Config>(configuration.GetSection("S3Service"));
+        var smtpConfig = new SmtpConfig();
+        configuration.GetSection("SMTP").Bind(smtpConfig);
+        services.AddSingleton(smtpConfig);
+        
+        var s3Config = new S3Config();
+        configuration.GetSection("S3Service").Bind(s3Config);
+        services.AddSingleton(s3Config);
 
         services.AddScoped<IEmailSenderService, EmailSenderService>();
         services.AddScoped<IS3StorageService, S3StorageService>();
