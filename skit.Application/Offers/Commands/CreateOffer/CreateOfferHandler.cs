@@ -2,6 +2,7 @@
 using skit.Core.Addresses.Repositories;
 using skit.Core.Common.Extensions;
 using skit.Core.Common.Services;
+using skit.Core.Identity.Exceptions;
 using skit.Core.Offers.Entities;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Entities;
@@ -28,6 +29,9 @@ internal sealed class CreateOfferHandler : IRequestHandler<CreateOfferCommand, C
 
     public async Task<CreateOrUpdateResponse> Handle(CreateOfferCommand command, CancellationToken cancellationToken)
     {
+        if (!await _currentUserService.IsEmailConfirmedAsync(cancellationToken))
+            throw new UnconfirmedEmailException();
+        
         if(command.Salaries.Any())
         {
             var isSingleEmploymentTypes = command.Salaries
