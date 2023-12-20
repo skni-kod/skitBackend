@@ -4,6 +4,7 @@ using skit.Core.Addresses.Exceptions;
 using skit.Core.Addresses.Repositories;
 using skit.Core.Common.Extensions;
 using skit.Core.Common.Services;
+using skit.Core.Identity.Exceptions;
 using skit.Core.Offers.Exceptions;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Entities;
@@ -32,6 +33,9 @@ internal sealed class UpdateOfferHandler : IRequestHandler<UpdateOfferCommand, C
 
     public async Task<CreateOrUpdateResponse> Handle(UpdateOfferCommand command, CancellationToken cancellationToken)
     {
+        if (!await _currentUserService.IsEmailConfirmedAsync(cancellationToken))
+            throw new UnconfirmedEmailException();
+        
         var offer = await _offerRepository.GetAsync(command.OfferId, cancellationToken);
 
         if (offer == null)
