@@ -1,5 +1,5 @@
-﻿using skit.Application.Companies.Queries.DTO;
-using skit.Application.Companies.Queries.GetCompanyForUpdate.DTO;
+﻿using skit.Application.Companies.Queries.CompanyOwner.GetCompanyForUpdate.DTO;
+using skit.Application.Companies.Queries.DTO;
 using skit.Core.Companies.Entities;
 using skit.Core.Companies.Enums;
 

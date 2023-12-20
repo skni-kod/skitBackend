@@ -15,6 +15,13 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new ExceptionFilter());
 });
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always; //TODO jak to kiedyś będzie stało na serwerze z https to odkomentować 
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
 builder.Services.AddIdentityConfig(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();

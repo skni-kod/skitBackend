@@ -4,4 +4,5 @@ public interface ICurrentUserService
 {
     Guid UserId { get; }
     Guid CompanyId { get; }
+    Task<bool> IsEmailConfirmedAsync(CancellationToken cancellationToken);
 }

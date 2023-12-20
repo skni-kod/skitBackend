@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using skit.Core.Common.Services;
+using skit.Core.Identity.Exceptions;
 using skit.Core.Offers.Exceptions;
 using skit.Core.Offers.Repositories;
 
@@ -18,6 +19,9 @@ internal sealed class DeleteOfferHandler : IRequestHandler<DeleteOfferCommand>
 
     public async Task Handle(DeleteOfferCommand request, CancellationToken cancellationToken)
     {
+        if (!await _currentUserService.IsEmailConfirmedAsync(cancellationToken))
+            throw new UnconfirmedEmailException();
+        
         var offer = await _offerRepository.GetAsync(request.OfferId, cancellationToken)
                     ?? throw new OfferNotFoundException();
 

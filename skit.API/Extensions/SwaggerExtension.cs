@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using System.Reflection;
+using Microsoft.OpenApi.Models;
 
 namespace skit.API.Extensions;
 
@@ -32,6 +33,10 @@ public static class SwaggerExtension
                     new string[] { }
                 }
             });
+            swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "SKIT API", Version = "v1" });
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            swagger.IncludeXmlComments(xmlPath);
         });
 
         return services;

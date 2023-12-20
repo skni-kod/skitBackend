@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using skit.Application.Companies.Queries.BrowseCompanies;
 using skit.Application.Companies.Queries.DTO;
+using skit.Application.Companies.Queries.Public.BrowseCompanies;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Abstractions;
 using skit.Shared.Extensions;
