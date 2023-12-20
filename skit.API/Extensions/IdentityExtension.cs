@@ -44,6 +44,10 @@ public static class IdentityExtension
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+            .AddCookie(options =>
+            {
+                options.SlidingExpiration = true;
+            })
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
