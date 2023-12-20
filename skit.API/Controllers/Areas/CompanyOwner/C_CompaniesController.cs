@@ -2,8 +2,7 @@
 using skit.API.Attributes;
 using skit.Application.Companies.Commands.DeleteCompany;
 using skit.Application.Companies.Commands.UpdateCompany;
-using skit.Application.Companies.Queries.BrowseCompanies;
-using skit.Application.Companies.Queries.GetCompanyForUpdate;
+using skit.Application.Companies.Queries.CompanyOwner.GetCompanyForUpdate;
 using skit.Core.Identity.Static;
 
 namespace skit.API.Controllers.Areas.CompanyOwner;
@@ -12,14 +11,9 @@ namespace skit.API.Controllers.Areas.CompanyOwner;
 [ApiAuthorize(Roles = UserRoles.CompanyOwner)]
 public class C_CompaniesController : BaseController
 {
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<BrowseCompaniesResponse>> BrowseCompanies([FromQuery] BrowseCompaniesQuery query, CancellationToken cancellationToken = default)
-    {
-        var response = await Mediator.Send(query, cancellationToken);
-        return Ok(response);
-    }
-    
+    /// <summary>
+    /// Update company by Id
+    /// </summary>
     [HttpPut("{companyId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> UpdateCompanies([FromRoute] Guid companyId, [FromBody] UpdateCompanyCommand command, CancellationToken cancellationToken = default)
@@ -29,6 +23,9 @@ public class C_CompaniesController : BaseController
         return Ok();
     }
 
+    /// <summary>
+    /// Get company by Id for update
+    /// </summary>
     [HttpGet("update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -38,6 +35,9 @@ public class C_CompaniesController : BaseController
         return OkOrNotFound(response);
     }
     
+    /// <summary>
+    /// Delete company by Id
+    /// </summary>
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> DeleteCompany(CancellationToken cancellationToken = default)

@@ -12,6 +12,9 @@ namespace skit.API.Controllers.Areas.Public;
 [Route($"{Endpoints.BasePublicUrl}/offers")]
 public sealed class P_OffersController : BaseController
 {
+    /// <summary>
+    /// Get public offers paginated list
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<BrowsePublicOffersResponse>> BrowsePublicOffers([FromQuery] BrowsePublicOffersQuery query, CancellationToken cancellationToken = default)
@@ -21,6 +24,9 @@ public sealed class P_OffersController : BaseController
         return Ok(response);
     }
     
+    /// <summary>
+    /// Get public offer bu Id
+    /// </summary>
     [HttpGet("{offerId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

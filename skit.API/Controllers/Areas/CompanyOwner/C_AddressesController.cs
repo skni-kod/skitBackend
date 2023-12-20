@@ -14,6 +14,9 @@ namespace skit.API.Controllers.Areas.CompanyOwner;
 [ApiAuthorize(Roles = UserRoles.CompanyOwner)]
 public sealed class C_AddressesController : BaseController
 {
+    /// <summary>
+    /// Get company addresses paginated list
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -24,16 +27,22 @@ public sealed class C_AddressesController : BaseController
         return Ok(result);
     }
     
+    /// <summary>
+    /// Get address by Id
+    /// </summary>
     [HttpGet("{id::guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GetAddressResponse>> BrowseAddresses([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetAddressResponse>> GetAddress([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetAddressQuery(id), cancellationToken);
         return OkOrNotFound(result);
     }
     
+    /// <summary>
+    /// Create address
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -43,6 +52,9 @@ public sealed class C_AddressesController : BaseController
         return Created(string.Empty, result);
     }
     
+    /// <summary>
+    /// Update address by Id
+    /// </summary>
     [HttpPut("{id::guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -53,6 +65,9 @@ public sealed class C_AddressesController : BaseController
         return Ok(result);
     }
     
+    /// <summary>
+    /// Delete address by Id
+    /// </summary>
     [HttpDelete("{id::guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

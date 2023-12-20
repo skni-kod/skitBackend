@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using skit.Application.Companies.Queries.GetCompanyForUpdate;
+using skit.Application.Companies.Queries.CompanyOwner.GetCompanyForUpdate;
 using skit.Core.Common.Services;
 using skit.Infrastructure.DAL.EF.Context;
 
