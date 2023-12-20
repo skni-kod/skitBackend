@@ -5,12 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using skit.Core.Addresses.Repositories;
 using skit.Core.Companies.Repositories;
+using skit.Core.Files.Repositories;
 using skit.Core.Identity.Services;
 using skit.Core.Offers.Repositories;
 using skit.Core.Technologies.Repositories;
 using skit.Infrastructure.DAL.Addresses.Repositories;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
+using skit.Infrastructure.DAL.Files.Repositories;
 using skit.Infrastructure.DAL.Identity.Services;
 using skit.Infrastructure.DAL.Offers.Repositories;
 using skit.Infrastructure.DAL.Technologies.Repositories;
@@ -38,6 +40,7 @@ internal static class Extension
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IOfferRepository, OfferRepository>();
         services.AddScoped<ITechnologyRepository, TechnologyRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
         
         return services;
     }

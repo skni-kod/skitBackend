@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using skit.Core.Addresses.Entities;
 using skit.Core.Common.Services;
 using skit.Core.Companies.Entities;
+using skit.Core.Files.Entities;
 using skit.Core.Identity.Entities;
 using skit.Core.JobApplications.Entities;
 using skit.Core.Offers.Entities;
@@ -13,6 +14,8 @@ using skit.Core.Salaries.Entities;
 using skit.Core.Technologies.Entities;
 using skit.Infrastructure.DAL.Addresses.Configurations;
 using skit.Infrastructure.DAL.Companies.Configurations;
+using skit.Infrastructure.DAL.Files;
+using skit.Infrastructure.DAL.Files.Configuration;
 using skit.Infrastructure.DAL.JobApplications.Configurations;
 using skit.Infrastructure.DAL.Offers.Configurations;
 using skit.Infrastructure.DAL.Salaries.Configurations;
@@ -31,6 +34,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
     public DbSet<Offer> Offers { get; set; }
     public DbSet<Salary> Salaries { get; set; }
     public DbSet<Technology> Technologies { get; set; }
+    public DbSet<SystemFile> Files { get; set; }
 
     private readonly Guid _userId = Guid.Empty;
     
@@ -53,6 +57,7 @@ public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, Ident
         modelBuilder.ApplyConfiguration(new OfferConfiguration());
         modelBuilder.ApplyConfiguration(new SalaryConfiguration());
         modelBuilder.ApplyConfiguration(new TechnologyConfiguration());
+        modelBuilder.ApplyConfiguration(new FileConfiguration());
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
