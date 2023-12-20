@@ -5,7 +5,7 @@ using skit.Core.Common.Services;
 using skit.Core.Companies.Entities;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Abstractions;
-using skit.Shared.Abstractions.Extensions;
+using skit.Shared.Extensions;
 
 namespace skit.Infrastructure.DAL.Offers.Queries.BrowseOffers;
 
@@ -38,7 +38,7 @@ internal sealed class BrowseOffersHandler : IRequestHandler<BrowseOffersQuery, B
             .Include(offer => offer.Company)
             .Include(offer => offer.Technologies)
             .Select(offer => offer.AsDto())
-            .ToPaginatedListAsync(query);
+            .ToPaginatedListAsync(query, cancellationToken);
 
         return new BrowseOffersResponse(result);
     }

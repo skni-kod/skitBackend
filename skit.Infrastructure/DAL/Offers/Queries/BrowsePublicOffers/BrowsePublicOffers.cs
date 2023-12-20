@@ -2,7 +2,7 @@
 using skit.Application.Offers.Queries.BrowsePublicOffers;
 using skit.Core.Offers.Enums;
 using skit.Infrastructure.DAL.EF.Context;
-using skit.Shared.Abstractions.Extensions;
+using skit.Shared.Extensions;
 
 namespace skit.Infrastructure.DAL.Offers.Queries.BrowsePublicOffers;
 
@@ -33,7 +33,7 @@ internal sealed class BrowsePublicOffers : IRequestHandler<BrowsePublicOffersQue
             .Include(offer => offer.Company)
             .Include(offer => offer.Technologies)
             .Select(offer => offer.AsDto())
-            .ToPaginatedListAsync(query);
+            .ToPaginatedListAsync(query, cancellationToken);
 
         return new BrowsePublicOffersResponse(result);
     }

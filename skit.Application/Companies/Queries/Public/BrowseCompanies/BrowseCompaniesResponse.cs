@@ -1,5 +1,5 @@
 ﻿using skit.Application.Companies.Queries.DTO;
-using skit.Shared.Abstractions.Models;
+using skit.Shared.Models;
 
 namespace skit.Application.Companies.Queries.Public.BrowseCompanies;
 

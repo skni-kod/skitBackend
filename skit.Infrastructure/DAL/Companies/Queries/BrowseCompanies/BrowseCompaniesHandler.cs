@@ -4,7 +4,7 @@ using skit.Application.Companies.Queries.DTO;
 using skit.Application.Companies.Queries.Public.BrowseCompanies;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Abstractions;
-using skit.Shared.Abstractions.Extensions;
+using skit.Shared.Extensions;
 
 namespace skit.Infrastructure.DAL.Companies.Queries.BrowseCompanies;
 
@@ -36,7 +36,7 @@ internal sealed class BrowseCompaniesHandler : IRequestHandler<BrowseCompaniesQu
 
         var result = await companies
             .Select(company => company.AsDto())
-            .ToPaginatedListAsync(query);
+            .ToPaginatedListAsync(query, cancellationToken);
 
         return new BrowseCompaniesResponse(result);
     }

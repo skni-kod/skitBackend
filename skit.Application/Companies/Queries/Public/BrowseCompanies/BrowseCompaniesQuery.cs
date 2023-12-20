@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using skit.Core.Companies.Enums;
-using skit.Shared.Abstractions.Models;
+using skit.Shared.Models;
 
 namespace skit.Application.Companies.Queries.Public.BrowseCompanies;
 
