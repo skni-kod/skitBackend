@@ -4,4 +4,4 @@ using skit.Core.Files.Enums;
 
 namespace skit.Application.Files.Commands.UploadFile;
 
-public sealed record UploadFilCommand(IFormFile File, FileType Type) : IRequest<UploadFileResponse>;
+public sealed record UploadFileCommand(IFormFile File, FileType Type) : IRequest<UploadFileResponse>;

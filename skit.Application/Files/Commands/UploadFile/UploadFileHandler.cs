@@ -7,7 +7,7 @@ using skit.Core.Files.Services;
 
 namespace skit.Application.Files.Commands.UploadFile;
 
-public sealed class UploadFileHandler : IRequestHandler<UploadFilCommand, UploadFileResponse>
+public sealed class UploadFileHandler : IRequestHandler<UploadFileCommand, UploadFileResponse>
 {
     private readonly IFileRepository _fileRepository;
     private readonly IS3StorageService _s3StorageService;
@@ -18,7 +18,7 @@ public sealed class UploadFileHandler : IRequestHandler<UploadFilCommand, Upload
         _s3StorageService = s3StorageService;
     }
     
-    public async Task<UploadFileResponse> Handle(UploadFilCommand request, CancellationToken cancellationToken)
+    public async Task<UploadFileResponse> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
         var s3Key = await _s3StorageService.UploadFileAsync(request.File, cancellationToken);
 

@@ -28,4 +28,8 @@
       <ProjectReference Include="..\skit.Shared\skit.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\SeedData\Technologies\Images\" />
+    </ItemGroup>
+
 </Project>
