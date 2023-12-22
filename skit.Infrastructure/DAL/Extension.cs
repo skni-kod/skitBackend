@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using FluentValidation;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using skit.Core.Addresses.Repositories;
@@ -16,7 +14,6 @@ using skit.Infrastructure.DAL.Files.Repositories;
 using skit.Infrastructure.DAL.Identity.Services;
 using skit.Infrastructure.DAL.Offers.Repositories;
 using skit.Infrastructure.DAL.Technologies.Repositories;
-using skit.Infrastructure.Integrations.Emails.Configuration;
 
 namespace skit.Infrastructure.DAL;
 
