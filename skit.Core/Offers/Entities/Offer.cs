@@ -97,4 +97,9 @@ public sealed class Offer : Entity
         _addresses = addresses;
         _technologies = technologies;
     }
+
+    public void ChangeStatus(OfferStatus status)
+    {
+        Status = status;
+    }
 }
