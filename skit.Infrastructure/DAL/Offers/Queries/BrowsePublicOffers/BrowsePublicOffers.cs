@@ -20,6 +20,8 @@ internal sealed class BrowsePublicOffers : IRequestHandler<BrowsePublicOffersQue
     {
         var offers = _context.Offers.AsNoTracking().Where(offer => offer.Status == OfferStatus.Public);
 
+        #region Filters
+        
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var searchTxt = $"%{query.Search}%";
@@ -51,8 +53,9 @@ internal sealed class BrowsePublicOffers : IRequestHandler<BrowsePublicOffersQue
 
         if (query.TechnologyIds is not null && query.TechnologyIds.Any())
             offers = offers.Where(offer => offer.Technologies.Any(technology => query.TechnologyIds.Contains(technology.Id)));
-
-
+        
+        #endregion
+        
         var result = await offers
             .Include(offer => offer.Addresses)
             .Include(offer => offer.Salaries)
