@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using skit.Application.Offers.Queries.BrowsePublicOffers;
+using skit.Core.Common.Extensions;
 using skit.Core.Offers.Enums;
 using skit.Infrastructure.DAL.EF.Context;
 using skit.Shared.Extensions;
@@ -19,6 +20,8 @@ internal sealed class BrowsePublicOffers : IRequestHandler<BrowsePublicOffersQue
     {
         var offers = _context.Offers.AsNoTracking().Where(offer => offer.Status == OfferStatus.Public);
 
+        #region Filters
+        
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var searchTxt = $"%{query.Search}%";
@@ -27,6 +30,32 @@ internal sealed class BrowsePublicOffers : IRequestHandler<BrowsePublicOffersQue
                                            offer.Description != null && Microsoft.EntityFrameworkCore.EF.Functions.ILike(offer.Description, searchTxt));
         }
 
+        if (query.Seniorities is not null && query.Seniorities.Any())
+        {
+            var querySeniorities = query.Seniorities.AggregateToFlag();
+            offers = offers.Where(offer => (offer.Seniority & querySeniorities) != 0);
+        }
+
+        if (query.WorkLocations is not null && query.WorkLocations.Any())
+        {
+            var queryWorkLocations = query.WorkLocations.AggregateToFlag();
+            offers = offers.Where(offer => (offer.WorkLocation & queryWorkLocations) != 0);
+        }
+            
+        if (query.Cities is not null && query.Cities.Any(city => !string.IsNullOrWhiteSpace(city)))
+            offers = offers.Where(offer => offer.Addresses.Any(address => query.Cities.Contains(address.City)));
+
+        if (query.SalaryFrom is not null)
+            offers = offers.Where(offer => offer.Salaries.Any(salary => salary.SalaryTo >= query.SalaryFrom));
+
+        if (query.EmploymentType is not null && query.EmploymentType.Any())
+            offers = offers.Where(offer => offer.Salaries.Any(salary => query.EmploymentType.Contains(salary.EmploymentType)));
+
+        if (query.TechnologyIds is not null && query.TechnologyIds.Any())
+            offers = offers.Where(offer => offer.Technologies.Any(technology => query.TechnologyIds.Contains(technology.Id)));
+        
+        #endregion
+        
         var result = await offers
             .Include(offer => offer.Addresses)
             .Include(offer => offer.Salaries)

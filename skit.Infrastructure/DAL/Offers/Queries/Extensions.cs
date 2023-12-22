@@ -113,6 +113,7 @@ internal static class Extensions
     {
         return new TechnologyDto
         {
+            Id = technology.Id,
             Name = technology.Name,
             ThumUrl = technology.ThumUrl
         };
