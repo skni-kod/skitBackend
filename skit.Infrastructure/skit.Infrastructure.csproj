@@ -9,6 +9,8 @@
     <ItemGroup>
       <PackageReference Include="AWSSDK.S3" Version="3.7.304.7" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.1" />
+      <PackageReference Include="Hangfire" Version="1.8.6" />
+      <PackageReference Include="Hangfire.PostgreSql" Version="1.20.4" />
       <PackageReference Include="MailKit" Version="4.3.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />

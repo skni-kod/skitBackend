@@ -15,6 +15,9 @@ internal sealed class OfferRepository : IOfferRepository
         _offers = _context.Offers;
     }
 
+    public async Task<List<Offer>> GetAllAsync(CancellationToken cancellationToken)
+        => await _offers.ToListAsync(cancellationToken);
+
     public async Task<Offer?> GetAsync(Guid offerId, CancellationToken cancellationToken)
         => await _offers
             .Include(offer => offer.Salaries)
