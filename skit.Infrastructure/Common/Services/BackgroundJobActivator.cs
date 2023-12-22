@@ -9,7 +9,7 @@ namespace skit.Infrastructure.Common.Services;
 
 public class BackgroundJobActivator : IHostedService
 {
-    private static readonly string JobId = "FinishOffers";
+    private const string JobId = "FinishOffers";
     private readonly IServiceProvider _serviceProvider;
     private IMediator _mediator;
 
