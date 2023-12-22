@@ -7,9 +7,9 @@ namespace skit.Application.Offers.Queries.BrowsePublicOffers;
 
 public sealed record BrowsePublicOffersQuery(
     string? Search,
-    List<OfferSeniority> OfferSeniorities,
-    List<OfferWorkLocation> OfferWorkLocations,
-    List<string> Cities,
-    decimal SalaryFrom,
-    List<SalaryEmploymentType> EmploymentType,
-    List<Guid> TechnologyIds) : PaginationRequest, IRequest<BrowsePublicOffersResponse>;
+    List<OfferSeniority>? Seniorities,
+    List<OfferWorkLocation>? WorkLocations,
+    List<string>? Cities,
+    decimal? SalaryFrom,
+    List<SalaryEmploymentType>? EmploymentType,
+    List<Guid>? TechnologyIds) : PaginationRequest, IRequest<BrowsePublicOffersResponse>;
