@@ -12,7 +12,8 @@ internal static class Extension
         services.AddScoped<IDateService, DateService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IHangfireService, HangfireService>();
-
+        services.AddHostedService<BackgroundJobActivator>();
+        
         return services;
     }
 }
