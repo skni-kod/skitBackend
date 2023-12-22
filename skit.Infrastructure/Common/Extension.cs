@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using skit.Core.BackgroundProcessing.Services;
 using skit.Core.Common.Services;
 using skit.Infrastructure.Common.Services;
 
@@ -11,6 +11,7 @@ internal static class Extension
     {
         services.AddScoped<IDateService, DateService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IHangfireService, HangfireService>();
 
         return services;
     }

@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using Hangfire;
 using skit.API.Extensions;
 using skit.API.Filters;
 using skit.Application;
@@ -49,6 +50,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHangfireDashboard();
 
 app.MapControllers();
 
