@@ -5,6 +5,7 @@ using skit.Core.Addresses.Repositories;
 using skit.Core.Companies.Repositories;
 using skit.Core.Files.Repositories;
 using skit.Core.Identity.Services;
+using skit.Core.JobApplications.Repositories;
 using skit.Core.Offers.Repositories;
 using skit.Core.Technologies.Repositories;
 using skit.Infrastructure.DAL.Addresses.Repositories;
@@ -13,6 +14,7 @@ using skit.Infrastructure.DAL.EF.Context;
 using skit.Infrastructure.DAL.EF.Seeder;
 using skit.Infrastructure.DAL.Files.Repositories;
 using skit.Infrastructure.DAL.Identity.Services;
+using skit.Infrastructure.DAL.JobApplications.Repositories;
 using skit.Infrastructure.DAL.Offers.Repositories;
 using skit.Infrastructure.DAL.Technologies.Repositories;
 
@@ -40,6 +42,7 @@ internal static class Extension
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IOfferRepository, OfferRepository>();
         services.AddScoped<ITechnologyRepository, TechnologyRepository>();
+        services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
         services.AddScoped<IFileRepository, FileRepository>();
         
         return services;
