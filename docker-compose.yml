@@ -1,0 +1,52 @@
+﻿version: '3.9'
+
+services:
+  api:
+    image: skit
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on: 
+      - createBucket
+    ports:
+      - '5000:80'
+        
+  db:
+    image: postgres
+    ports:
+      - '6000:5432'
+    environment: 
+      POSTGRES_DB: skit-database
+      POSTGRES_USER: skit-user
+      POSTGRES_PASSWORD: 1qazXSW@
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    depends_on:
+      - minio
+        
+  minio:
+    image: minio/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=1qazXSW@
+    command: server --console-address ":9001" --address ":9000" /data
+    
+  createBucket:
+    image: minio/mc
+    depends_on:
+      - db
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 admin 1qazXSW@;
+      /usr/bin/mc mb myminio/skit;
+      exit 0;"
+  
+volumes:
+  minio_data:
+    driver: local
+  postgres-data:

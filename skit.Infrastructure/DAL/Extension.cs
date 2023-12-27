@@ -10,6 +10,7 @@ using skit.Core.Technologies.Repositories;
 using skit.Infrastructure.DAL.Addresses.Repositories;
 using skit.Infrastructure.DAL.Companies.Repositories;
 using skit.Infrastructure.DAL.EF.Context;
+using skit.Infrastructure.DAL.EF.Seeder;
 using skit.Infrastructure.DAL.Files.Repositories;
 using skit.Infrastructure.DAL.Identity.Services;
 using skit.Infrastructure.DAL.Offers.Repositories;
@@ -30,6 +31,8 @@ internal static class Extension
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 }).LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         });
+
+        services.AddHostedService<DatabaseInitializer>();
         
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
