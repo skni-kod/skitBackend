@@ -1,4 +1,5 @@
-﻿using skit.Core.Identity.DTO;
+﻿using Microsoft.AspNetCore.Authentication;
+using skit.Core.Identity.DTO;
 using skit.Core.Identity.Entities;
 
 namespace skit.Core.Identity.Services;
@@ -14,4 +15,7 @@ public interface IIdentityService
     Task<string> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken);
     Task ConfirmAccountAsync(Guid userId, string token, CancellationToken cancellationToken);
     Task ResetPasswordAsync(Guid userId, string token, string password, CancellationToken cancellationToken);
+    AuthenticationProperties? ConfigureGoogleAuthentication(string redirectUrl);
+    Task<JsonWebToken> SignInGoogle(CancellationToken cancellationToken);
+
 }

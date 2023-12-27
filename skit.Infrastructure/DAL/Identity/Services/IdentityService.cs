@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using skit.Core.Common.Services;
@@ -43,8 +44,8 @@ public sealed class IdentityService : IIdentityService
         
         if (companyNameIsNotUnique)
             throw new CompanyWithNameExistsException();
-        
-        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         
         var user = new User
         {
@@ -198,6 +199,85 @@ public sealed class IdentityService : IIdentityService
         var result = await _userManager.ResetPasswordAsync(user, token, password);
         if (!result.Succeeded)
             throw new ChangePasswordException(result.Errors);
+    }
+
+    public AuthenticationProperties? ConfigureGoogleAuthentication(string redirectUrl)
+    {
+        return _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+    }
+
+    public async Task<JsonWebToken> SignInGoogle(CancellationToken cancellationToken)
+    {
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+            throw new GoogleAuthFailedException();
+
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+        JsonWebToken token;
+        RefreshToken refreshToken;
+        
+        if (result.Succeeded)
+        {
+            var userResult = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == info.Principal.FindFirst(ClaimTypes.Email).Value, cancellationToken)
+                             ?? throw new GoogleAuthFailedException();
+            var userRoles = await _userManager.GetRolesAsync(userResult);
+            
+            token = await _tokenService.GenerateGoogleAccessToken(info.Principal, userResult.Id, userResult.Email, userRoles);
+            refreshToken = _tokenService.GenerateRefreshToken();
+
+            token.RefreshToken = refreshToken;
+            DeleteExpiredRefreshTokens(userResult);
+            userResult.AddRefreshToken(refreshToken);
+            
+            _context.Update(userResult);
+            await _context.SaveChangesAsync(cancellationToken);
+            
+            return token;
+        }
+
+        var user = new User
+        {
+            Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+            UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
+            EmailConfirmed = true
+        };
+
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        
+        var createResult = await _userManager.CreateAsync(user);
+        if (!createResult.Succeeded) 
+            throw new GoogleAuthFailedException();
+        
+        var addRoleResult = await _userManager.AddToRoleAsync(user, UserRoles.CompanyOwner);
+        if (!addRoleResult.Succeeded)
+            throw new AddToRoleException();
+        
+        var addEmailClaimResult = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
+        if (!addEmailClaimResult.Succeeded)
+            throw new AddClaimException();
+        
+        var addNameClaimResult = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+        if (!addNameClaimResult.Succeeded)
+            throw new AddClaimException();
+
+        var addLoginResult = await _userManager.AddLoginAsync(user, info);
+        if (!addLoginResult.Succeeded)
+            throw new GoogleAuthFailedException();
+        
+        var roles = await _userManager.GetRolesAsync(user);
+
+        token = await _tokenService.GenerateGoogleAccessToken(info.Principal, user.Id, user.Email, roles);
+        refreshToken = _tokenService.GenerateRefreshToken();
+
+        token.RefreshToken = refreshToken;
+        user.AddRefreshToken(refreshToken);
+            
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        await transaction.CommitAsync(cancellationToken);
+        
+        return token;
     }
 
     private void DeleteExpiredRefreshTokens(User user)

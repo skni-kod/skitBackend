@@ -1,23 +1,39 @@
-﻿using System.Net;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using skit.API.Attributes;
 using skit.API.Common;
 using skit.Application.Identity.Commands.ConfirmAccount;
 using skit.Application.Identity.Commands.RefreshToken;
 using skit.Application.Identity.Commands.ResetPassword;
 using skit.Application.Identity.Commands.SignIn;
+using skit.Application.Identity.Commands.SignInGoogle;
 using skit.Application.Identity.Commands.SignOut;
 using skit.Application.Identity.Commands.SignUpCompany;
 using skit.Application.Identity.Events.SendConfirmAccountEmail;
 using skit.Application.Identity.Events.SendResetPasswordEmail;
 using skit.Core.Identity.DTO;
+using skit.Core.Identity.Entities;
+using skit.Core.Identity.Services;
 using skit.Core.Identity.Static;
+using skit.Shared.Configurations.Identity;
 
 namespace skit.API.Controllers.Areas.Auth;
 
 [Route($"{Endpoints.BaseUrl}/account")]
 public sealed class AccountController : BaseController
 {
+    private readonly IIdentityService _identityService;
+
+    public AccountController(IIdentityService identityService)
+    {
+        _identityService = identityService;
+    }
+    
     /// <summary>
     /// Sign up user and create company
     /// </summary>
@@ -122,6 +138,22 @@ public sealed class AccountController : BaseController
         return Ok();
     }
     
+    [HttpGet("signin-google")]
+    public IActionResult GoogleLogin()
+    {
+        var redirectUrl = Url.Action("GoogleResponse", "Account");
+        var properties = _identityService.ConfigureGoogleAuthentication(redirectUrl);
+        return Challenge(properties, "Google");
+    }
+    
+    [HttpGet("google-response")]
+    public async Task<ActionResult<JsonWebToken>> GoogleResponse(CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new SignInGoogleCommand(), cancellationToken);
+        SetRefreshTokenCookie(result.RefreshToken);
+        return Ok(result);
+    }
+
     private void SetRefreshTokenCookie(RefreshToken refreshToken)
     {
         var cookieOptions = new CookieOptions

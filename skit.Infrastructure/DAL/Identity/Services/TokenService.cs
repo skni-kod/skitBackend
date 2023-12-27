@@ -75,6 +75,40 @@ public sealed class TokenService : ITokenService
         };
     }
 
+    public async Task<JsonWebToken> GenerateGoogleAccessToken(ClaimsPrincipal principal, Guid userId, string userEmail, ICollection<string> roles)
+    {
+        var now = _dateService.CurrentDate();
+        var issuer = _authConfig.JwtIssuer;
+
+        var claims = principal.Claims.ToList();
+        
+        if (roles?.Any() is true)
+                    foreach (var role in roles)
+                        claims.Add(new Claim("role", role));
+
+        var expires = now.Add(_authConfig.Expires);
+        
+        var jwt = new JwtSecurityToken(
+            issuer,
+            issuer,
+            claims,
+            now,
+            expires,
+            _signingCredentials);
+        
+        var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+        
+        return new JsonWebToken
+        {
+            AccessToken = token,
+            Expires = new DateTimeOffset(expires).ToUnixTimeSeconds(),
+            UserId = userId,
+            Email = userEmail,
+            Roles = roles,
+            Claims = claims?.ToDictionary(x => x.Type, x => x.Value)
+        };
+    }
+
     public RefreshToken GenerateRefreshToken()
     {
         var refreshToken = new RefreshToken
