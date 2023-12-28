@@ -5,7 +5,6 @@ namespace skit.Core.Identity.Services;
 
 public interface ITokenService
 {
-    Task<JsonWebToken> GenerateAccessToken(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims);
-    Task<JsonWebToken> GenerateGoogleAccessToken(ClaimsPrincipal principal, Guid userId, string userEmail, ICollection<string> roles);
+    Task<JsonWebToken> GenerateAccessTokenAsync(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims);
     RefreshToken GenerateRefreshToken();
 }

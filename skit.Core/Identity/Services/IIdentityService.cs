@@ -6,7 +6,7 @@ namespace skit.Core.Identity.Services;
 
 public interface IIdentityService
 {
-    Task<Guid> SignUpCompany(string email, string companyName, string password, CancellationToken cancellationToken);
+    Task<Guid> SignUp(string email, string password, CancellationToken cancellationToken);
     Task<JsonWebToken> SignIn(string email, string password, CancellationToken cancellationToken);
     Task SignOut(string? refreshToken, CancellationToken cancellationToken);
     Task<JsonWebToken> RefreshToken(string? refreshToken, CancellationToken cancellationToken);
@@ -16,6 +16,7 @@ public interface IIdentityService
     Task ConfirmAccountAsync(Guid userId, string token, CancellationToken cancellationToken);
     Task ResetPasswordAsync(Guid userId, string token, string password, CancellationToken cancellationToken);
     AuthenticationProperties? ConfigureGoogleAuthentication(string redirectUrl);
-    Task<JsonWebToken> SignInGoogle(CancellationToken cancellationToken);
+    Task<JsonWebToken> GoogleAuthAsync(CancellationToken cancellationToken);
+    Task<JsonWebToken> AddCompanyToUserAsync(Guid userId, Guid companyId, CancellationToken cancellationToken);
 
 }

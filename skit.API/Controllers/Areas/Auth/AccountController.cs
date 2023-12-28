@@ -37,10 +37,10 @@ public sealed class AccountController : BaseController
     /// <summary>
     /// Sign up user and create company
     /// </summary>
-    [HttpPost("sign-up-company")]
+    [HttpPost("sign-up")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<JsonWebToken>> SignUpCompany([FromBody] SignUpCompanyCommand command,
+    public async Task<ActionResult<JsonWebToken>> SignUpCompany([FromBody] SignUpCommand command,
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
@@ -152,15 +152,5 @@ public sealed class AccountController : BaseController
         var result = await Mediator.Send(new SignInGoogleCommand(), cancellationToken);
         SetRefreshTokenCookie(result.RefreshToken);
         return Ok(result);
-    }
-
-    private void SetRefreshTokenCookie(RefreshToken refreshToken)
-    {
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = refreshToken.Expires
-        };
-        Response.Cookies.Append(Tokens.RefreshToken, refreshToken.Token, cookieOptions);
     }
 }

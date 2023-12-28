@@ -15,6 +15,6 @@ public sealed class SignInGoogleHandler : IRequestHandler<SignInGoogleCommand, J
     
     public async Task<JsonWebToken> Handle(SignInGoogleCommand request, CancellationToken cancellationToken)
     {
-        return await _identityService.SignInGoogle(cancellationToken);
+        return await _identityService.GoogleAuthAsync(cancellationToken);
     }
 }
