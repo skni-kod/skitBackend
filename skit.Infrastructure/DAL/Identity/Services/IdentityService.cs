@@ -1,4 +1,6 @@
 ﻿using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using skit.Core.Common.Services;
@@ -32,19 +34,14 @@ public sealed class IdentityService : IIdentityService
         _dateService = dateService;
     }
     
-    public async Task<Guid> SignUpCompany(string email, string companyName, string password, CancellationToken cancellationToken)
+    public async Task<Guid> SignUp(string email, string password, CancellationToken cancellationToken)
     {
         var userEmailIsNotUnique = await _userManager.Users.AnyAsync(x => x.Email == email, cancellationToken);
         
         if (userEmailIsNotUnique)
             throw new UserWithEmailExistsException();
         
-        var companyNameIsNotUnique = await _context.Companies.AnyAsync(x => x.Name.Equals(companyName), cancellationToken);
-        
-        if (companyNameIsNotUnique)
-            throw new CompanyWithNameExistsException();
-        
-        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         
         var user = new User
         {
@@ -56,17 +53,7 @@ public sealed class IdentityService : IIdentityService
         
         if (!createUser.Succeeded)
             throw new CreateUserException(createUser.Errors);
-        
-        var company = Company.Create(companyName, user.Id);
-        var companyResult = await _context.AddAsync(company, cancellationToken);
-        user.CompanyId = companyResult.Entity.Id;
-        _context.Update(user);
-        await _context.SaveChangesAsync(cancellationToken);
-        
-        var addRoleResult = await _userManager.AddToRoleAsync(user, UserRoles.CompanyOwner);
-        if (!addRoleResult.Succeeded)
-            throw new AddToRoleException();
-        
+
         var addEmailClaimResult = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
         if (!addEmailClaimResult.Succeeded)
             throw new AddClaimException();
@@ -74,11 +61,7 @@ public sealed class IdentityService : IIdentityService
         var addNameClaimResult = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
         if (!addNameClaimResult.Succeeded)
             throw new AddClaimException();
-        
-        var addCompanyIdClaimResult = await _userManager.AddClaimAsync(user, new Claim(UserClaims.CompanyId, companyResult.Entity.Id.ToString()));
-        if (!addCompanyIdClaimResult.Succeeded)
-            throw new AddClaimException();
-        
+
         await transaction.CommitAsync(cancellationToken);
 
         return user.Id;
@@ -95,18 +78,7 @@ public sealed class IdentityService : IIdentityService
         if (!result.Succeeded)
             throw new SignInException(result);
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var claims = await _userManager.GetClaimsAsync(user);
-
-        var jwt = await _tokenService.GenerateAccessToken(user.Id, user.Email!, roles, claims);
-        var refreshToken = _tokenService.GenerateRefreshToken();
-
-        jwt.RefreshToken = refreshToken;
-        
-        DeleteExpiredRefreshTokens(user);
-        user.AddRefreshToken(refreshToken);
-        _context.Update(user);
-        await _context.SaveChangesAsync(cancellationToken);
+        var jwt = await GenerateJwtAsync(user, cancellationToken);
 
         return jwt;
     }
@@ -138,18 +110,8 @@ public sealed class IdentityService : IIdentityService
         if (currentRefreshToken.IsExpired)
             throw new InvalidRefreshTokenException();
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var claims = await _userManager.GetClaimsAsync(user);
-
-        var jwt = await _tokenService.GenerateAccessToken(user.Id, user.Email!, roles, claims);
-        var newRefreshToken = _tokenService.GenerateRefreshToken();
-
-        jwt.RefreshToken = newRefreshToken;
-        
         user.DeleteRefreshToken(currentRefreshToken);
-        user.AddRefreshToken(newRefreshToken);
-        _context.Update(user);
-        await _context.SaveChangesAsync(cancellationToken);
+        var jwt = await GenerateJwtAsync(user, cancellationToken);
         
         return jwt;
     }
@@ -198,6 +160,107 @@ public sealed class IdentityService : IIdentityService
         var result = await _userManager.ResetPasswordAsync(user, token, password);
         if (!result.Succeeded)
             throw new ChangePasswordException(result.Errors);
+    }
+
+    public AuthenticationProperties? ConfigureGoogleAuthentication(string redirectUrl)
+    {
+        return _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+    }
+
+    public async Task<JsonWebToken> GoogleAuthAsync(CancellationToken cancellationToken)
+    {
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+            throw new GoogleAuthFailedException();
+
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+        JsonWebToken token;
+        
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+        if (result.Succeeded)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == info.Principal.FindFirst(ClaimTypes.Email).Value, cancellationToken)
+                             ?? throw new GoogleAuthFailedException();
+
+            token = await GenerateJwtAsync(user, cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+            
+            return token;
+        }
+
+        var createdUser = new User
+        {
+            Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+            UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
+            EmailConfirmed = true
+        };
+        
+        var createResult = await _userManager.CreateAsync(createdUser);
+        if (!createResult.Succeeded) 
+            throw new GoogleAuthFailedException();
+        
+        var addEmailClaimResult = await _userManager.AddClaimAsync(createdUser, new Claim(ClaimTypes.Email, createdUser.Email));
+        if (!addEmailClaimResult.Succeeded)
+            throw new AddClaimException();
+        
+        var addNameClaimResult = await _userManager.AddClaimAsync(createdUser, new Claim(ClaimTypes.NameIdentifier, createdUser.Id.ToString()));
+        if (!addNameClaimResult.Succeeded)
+            throw new AddClaimException();
+        
+        var addLoginResult = await _userManager.AddLoginAsync(createdUser, info);
+        if (!addLoginResult.Succeeded)
+            throw new GoogleAuthFailedException();
+        
+        await _signInManager.RefreshSignInAsync(createdUser);
+        
+        token = await GenerateJwtAsync(createdUser, cancellationToken);
+        
+        await transaction.CommitAsync(cancellationToken);
+        
+        return token;
+    }
+
+    public async Task<JsonWebToken> AddCompanyToUserAsync(Guid userId, Guid companyId, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken)
+                   ?? throw new UserNotFoundException();
+
+        user.CompanyId = companyId;
+        _context.Update(user);
+        
+        var addCompanyClaimResult = await _userManager.AddClaimAsync(user, new Claim(UserClaims.CompanyId, companyId.ToString()));
+        if (!addCompanyClaimResult.Succeeded)
+            throw new AddClaimException();
+        
+        var addRoleResult = await _userManager.AddToRoleAsync(user, UserRoles.CompanyOwner);
+        if (!addRoleResult.Succeeded)
+            throw new AddToRoleException();
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        var jwt = await GenerateJwtAsync(user, cancellationToken);
+
+        return jwt;
+    }
+
+    private async Task<JsonWebToken> GenerateJwtAsync(User user, CancellationToken cancellationToken)
+    {
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var userClaims = await _userManager.GetClaimsAsync(user);
+            
+        var jwt = await _tokenService.GenerateAccessTokenAsync(user.Id, user.Email, userRoles, userClaims);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        jwt.RefreshToken = refreshToken;
+        DeleteExpiredRefreshTokens(user);
+        user.AddRefreshToken(refreshToken);
+        
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return jwt;
     }
 
     private void DeleteExpiredRefreshTokens(User user)

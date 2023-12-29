@@ -25,7 +25,7 @@ public sealed class TokenService : ITokenService
             SecurityAlgorithms.HmacSha256);
     }
     
-    public async Task<JsonWebToken> GenerateAccessToken(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims)
+    public async Task<JsonWebToken> GenerateAccessTokenAsync(Guid userId, string userEmail, ICollection<string> roles, ICollection<Claim> claims)
     {
         var now = _dateService.CurrentDate();
         var issuer = _authConfig.JwtIssuer;
@@ -74,7 +74,7 @@ public sealed class TokenService : ITokenService
             Claims = claims?.ToDictionary(x => x.Type, x => x.Value)
         };
     }
-
+    
     public RefreshToken GenerateRefreshToken()
     {
         var refreshToken = new RefreshToken

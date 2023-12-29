@@ -24,14 +24,17 @@ public sealed class Company : Entity
 
     private Company() {}
 
-    private Company(string name, Guid ownerId)
+    private Company(string name, string? description, CompanySize size, string? links, Guid ownerId)
     {
         Name = name;
+        Description = description;
+        Size = size;
+        Links = links;
         OwnerId = ownerId;
     }
 
-    public static Company Create(string name, Guid ownerId)
-        => new(name, ownerId);
+    public static Company Create(string name, string? description, CompanySize size, string? links, Guid ownerId)
+        => new(name, description, size, links, ownerId);
     
     public void Update(string name, string? description, CompanySize size, string? links)
     {
