@@ -12,7 +12,7 @@ public sealed class P_JobApplicationsController : BaseController
     /// <summary>
     /// Create application
     /// </summary>
-    [HttpPost("{offerId:guid}/applications")]
+    [HttpPost("{offerId:guid}/jobApplications")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateOrUpdateResponse>> CreateJobApplication([FromRoute] Guid offerId, 
