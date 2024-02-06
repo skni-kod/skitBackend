@@ -23,8 +23,8 @@ public sealed class GetFileHandler : IRequestHandler<GetFileQuery, GetFileRespon
             .SingleOrDefaultAsync(cancellationToken)
                    ?? throw new FileNotFoundException();
         
-        var fileUrl = _s3StorageService.GetFileUrl(file.S3Key, file.Name);
+        var fileStream = await _s3StorageService.GetFileAsync(file.S3Key, cancellationToken);
 
-        return new GetFileResponse(fileUrl);
+        return new GetFileResponse(fileStream, file.ContentType, file.Name);
     }
 }

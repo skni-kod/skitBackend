@@ -22,7 +22,7 @@ public sealed class UploadFileHandler : IRequestHandler<UploadFileCommand, Uploa
     {
         var s3Key = await _s3StorageService.UploadFileAsync(request.File, cancellationToken);
 
-        var file = SystemFile.Create(request.File.FileName, request.Type, request.File.Length, s3Key);
+        var file = SystemFile.Create(request.File.FileName, request.Type, request.File.Length, s3Key, request.File.ContentType);
 
         var result = await _fileRepository.AddAsync(file, cancellationToken);
 
