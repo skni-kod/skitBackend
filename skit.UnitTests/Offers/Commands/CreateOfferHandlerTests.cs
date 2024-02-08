@@ -2,7 +2,6 @@ using skit.Application.Offers.Commands.CreateOffer;
 using skit.Core.Addresses.Repositories;
 using skit.Core.Common.Services;
 using skit.Core.Identity.Exceptions;
-using skit.Core.Offers.Entities;
 using skit.Core.Offers.Enums;
 using skit.Core.Offers.Repositories;
 using skit.Core.Salaries.Enums;
@@ -13,14 +12,15 @@ namespace skit.UnitTests.Offers.Commands;
 
 public class CreateOfferHandlerTests
 {
-    private readonly Mock<IOfferRepository> _offerRepository = new();
-    private readonly Mock<IAddressRepository> _addressRepository = new();
-    private readonly Mock<ITechnologyRepository> _technologyRepository = new();
-    private readonly Mock<ICurrentUserService> _currentUserService = new();
+    private readonly IOfferRepository _offerRepository = Substitute.For<IOfferRepository>();
+    private readonly IAddressRepository _addressRepository = Substitute.For<IAddressRepository>();
+    private readonly ITechnologyRepository _technologyRepository = Substitute.For<ITechnologyRepository>();
+    private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
 
     [Fact]
     public async Task Handle_Should_ThrowException_WhenEmailIsNotConfirmed()
     {
+        
         // Arrange
         var command = new CreateOfferCommand
         {
@@ -33,8 +33,8 @@ public class CreateOfferHandlerTests
             TechnologyIds = new List<Guid> { Guid.NewGuid() }
         };
 
-        var handler = new CreateOfferHandler(_offerRepository.Object, _addressRepository.Object, _currentUserService.Object, _technologyRepository.Object);
-        _currentUserService.Setup(x => x.IsEmailConfirmedAsync(It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        var handler = new CreateOfferHandler(_offerRepository, _addressRepository, _currentUserService, _technologyRepository);
+        _currentUserService.IsEmailConfirmedAsync(Arg.Any<CancellationToken>()).Returns(false);
         
         // Act
         var exception = await Assert.ThrowsAsync<UnconfirmedEmailException>(() => handler.Handle(command, CancellationToken.None));
@@ -61,9 +61,9 @@ public class CreateOfferHandlerTests
             AddressIds = new List<Guid> { Guid.NewGuid() },
             TechnologyIds = new List<Guid> { Guid.NewGuid() }
         };
-
-        var handler = new CreateOfferHandler(_offerRepository.Object, _addressRepository.Object, _currentUserService.Object, _technologyRepository.Object);
-        _currentUserService.Setup(x => x.IsEmailConfirmedAsync(It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        
+        var handler = new CreateOfferHandler(_offerRepository, _addressRepository, _currentUserService, _technologyRepository);
+        _currentUserService.IsEmailConfirmedAsync(Arg.Any<CancellationToken>()).Returns(true);
         
         // Act
         var exception = await Assert.ThrowsAsync<DuplicateEmploymentTypeException>(() => handler.Handle(command, CancellationToken.None));
@@ -86,10 +86,9 @@ public class CreateOfferHandlerTests
             AddressIds = new List<Guid> { Guid.NewGuid() },
             TechnologyIds = new List<Guid> { Guid.NewGuid() }
         };
-
-        var handler = new CreateOfferHandler(_offerRepository.Object, _addressRepository.Object, _currentUserService.Object, _technologyRepository.Object);
-        _currentUserService.Setup(x => x.IsEmailConfirmedAsync(It.IsAny<CancellationToken>())).ReturnsAsync(true);
-        _offerRepository.Setup(x => x.AddAsync(It.IsAny<Offer>(), It.IsAny<CancellationToken>())).ReturnsAsync(Guid.NewGuid());
+        
+        var handler = new CreateOfferHandler(_offerRepository, _addressRepository, _currentUserService, _technologyRepository);
+        _currentUserService.IsEmailConfirmedAsync(Arg.Any<CancellationToken>()).Returns(true);
         
         // Act
         var response = await handler.Handle(command, CancellationToken.None);
