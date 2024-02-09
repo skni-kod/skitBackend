@@ -6,4 +6,5 @@ public interface IS3StorageService
 {
     Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken);
     string GetFileUrl(string fileKey, string fileName);
+    Task<MemoryStream> GetFileAsync(string fileKey, CancellationToken cancellationToken);
 }
