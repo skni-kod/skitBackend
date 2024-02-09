@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="AWSSDK.S3" Version="3.7.304.7" />
+      <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="4.2.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.1" />
       <PackageReference Include="Hangfire" Version="1.8.6" />
       <PackageReference Include="Hangfire.PostgreSql" Version="1.20.4" />
@@ -17,6 +18,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
