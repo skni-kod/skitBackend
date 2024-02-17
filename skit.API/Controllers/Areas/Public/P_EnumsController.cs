@@ -20,6 +20,10 @@ public sealed class P_EnumsController : BaseController
         _mediator = mediator;
     }
     
+    [HttpGet]
+    public ActionResult<List<BaseEnum>> asdf()
+        => EnumExtensions.GetValues<CompanySize>();
+    
     [HttpGet("company-size")]
     public ActionResult<List<BaseEnum>> GetCompanySizeEnum()
         => EnumExtensions.GetValues<CompanySize>();
