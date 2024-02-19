@@ -3,7 +3,7 @@ using skit.Application.JobApplications.Queries.GetJobApplication;
 
 namespace skit.API.Controllers.Areas.CompanyOwner;
 
-[Route($"{Endpoints.BasePublicUrl}/jobApplications")]
+[Route($"{Endpoints.BaseUrl}/jobApplications")]
 public sealed class P_JobApplicationsController : BaseController
 {
     /// <summary>
