@@ -6,19 +6,19 @@ using skit.Shared.Responses;
 namespace skit.API.Controllers.Areas.Public;
 
 [AllowAnonymous]
-[Route($"{Endpoints.BasePublicUrl}/offers")]
+[Route($"{Endpoints.BasePublicUrl}/jobApplications")]
 public sealed class P_JobApplicationsController : BaseController
 {
     /// <summary>
     /// Create application
     /// </summary>
-    [HttpPost("{offerId:guid}/jobApplications")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CreateOrUpdateResponse>> CreateJobApplication([FromRoute] Guid offerId, 
-        [FromBody] CreateJobApplicationCommand command, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<CreateOrUpdateResponse>> CreateJobApplication([FromBody] CreateJobApplicationCommand command, 
+        CancellationToken cancellationToken = default)
     {
-        var response = await Mediator.Send(command with {OfferId = offerId}, cancellationToken);
+        var response = await Mediator.Send(command, cancellationToken);
         return Created(string.Empty, response);
     }
 }
