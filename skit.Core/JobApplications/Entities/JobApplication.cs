@@ -24,4 +24,11 @@ public sealed class JobApplication : Entity
 
     public static JobApplication Create(string firstName, string surName, string? description, Guid offerId)
         => new(firstName, surName, description, offerId);
+    
+    public void Update(string firstName, string surName, string? description)
+    {
+        FirstName = firstName;
+        SurName = surName;
+        Description = description;
+    }
 }

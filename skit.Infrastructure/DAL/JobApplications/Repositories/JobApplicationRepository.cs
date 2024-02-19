@@ -21,4 +21,15 @@ internal sealed class JobApplicationRepository : IJobApplicationRepository
         await _context.SaveChangesAsync(cancellationToken);
         return result.Entity.Id;
     }
+
+    public async Task<JobApplication?> GetAsync(Guid jobApplicationId, CancellationToken cancellationToken)
+        => await _jobApplications.SingleOrDefaultAsync(jobApplication => jobApplication.Id == jobApplicationId, cancellationToken);
+
+    public async Task<Guid> UpdateAsync(JobApplication jobApplication, CancellationToken cancellationToken)
+    {
+        var result = _jobApplications.Update(jobApplication);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return result.Entity.Id;
+    }
 }
