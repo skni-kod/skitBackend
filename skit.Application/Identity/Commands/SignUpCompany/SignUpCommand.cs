@@ -3,8 +3,7 @@ using skit.Core.Identity.DTO;
 
 namespace skit.Application.Identity.Commands.SignUpCompany;
 
-public sealed record SignUpCompanyCommand(
+public sealed record SignUpCommand(
     string Email,
-    string CompanyName,
     string Password,
     string ConfirmedPassword) : IRequest<JsonWebToken>;

@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using skit.API.Common;
+using skit.Core.Identity.DTO;
 
 namespace skit.API.Controllers;
 
@@ -12,5 +14,15 @@ public class BaseController : ControllerBase
     protected ActionResult<TResult> OkOrNotFound<TResult>(TResult result)
     {
         return result is null ? NotFound() : Ok(result);
+    }
+    
+    protected void SetRefreshTokenCookie(RefreshToken refreshToken)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = refreshToken.Expires
+        };
+        Response.Cookies.Append(Tokens.RefreshToken, refreshToken.Token, cookieOptions);
     }
 }

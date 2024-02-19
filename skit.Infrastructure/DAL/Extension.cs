@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using skit.Core.Addresses.Repositories;
@@ -24,6 +25,12 @@ internal static class Extension
 {
     public static IServiceCollection AddDal(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddMemoryCache();
+        
+        services.AddEFSecondLevelCache(options =>
+            options.UseMemoryCacheProvider(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(30))
+                .DisableLogging(true));
+        
         services.AddDbContext<EFContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")!,
