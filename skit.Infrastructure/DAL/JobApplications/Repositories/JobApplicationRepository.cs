@@ -32,4 +32,10 @@ internal sealed class JobApplicationRepository : IJobApplicationRepository
 
         return result.Entity.Id;
     }
+
+    public async Task DeleteAsync(JobApplication jobApplication, CancellationToken cancellationToken)
+    {
+        _jobApplications.Remove(jobApplication);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using skit.API.Attributes;
+using skit.Application.JobApplications.Commands.DeleteJobApplication;
 using skit.Application.JobApplications.Commands.UpdateJobApplication;
 using skit.Application.JobApplications.Queries.BrowseJobApplications;
 using skit.Application.JobApplications.Queries.GetJobApplication;
@@ -38,7 +39,7 @@ public sealed class C_JobApplicationsController : BaseController
     }
     
     /// <summary>
-    /// Update application
+    /// Update job application
     /// </summary>
     [HttpPut("{jobApplicationId::guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -48,5 +49,18 @@ public sealed class C_JobApplicationsController : BaseController
     {
         var response = await Mediator.Send(command with {JobApplicationId = jobApplicationId}, cancellationToken);
         return Ok(response);
+    }
+    
+    /// <summary>
+    /// Delete job application
+    /// </summary>
+    [HttpDelete("{jobApplicationId::guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteJobApplication([FromRoute] Guid jobApplicationId, 
+        CancellationToken cancellationToken = default)
+    {
+        await Mediator.Send(new DeleteJobApplicationCommand(jobApplicationId), cancellationToken);
+        return Ok();
     }
 }
