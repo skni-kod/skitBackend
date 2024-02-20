@@ -1,13 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using skit.API.Attributes;
 using skit.Application.JobApplications.Commands.UpdateJobApplication;
+using skit.Application.JobApplications.Queries.BrowseJobApplications;
 using skit.Application.JobApplications.Queries.GetJobApplication;
+using skit.Core.Identity.Static;
 using skit.Shared.Responses;
 
 namespace skit.API.Controllers.Areas.CompanyOwner;
 
 [Route($"{Endpoints.BaseUrl}/jobApplications")]
-public sealed class P_JobApplicationsController : BaseController
+[ApiAuthorize(Roles = UserRoles.CompanyOwner)]
+public sealed class C_JobApplicationsController : BaseController
 {
+    /// <summary>
+    /// Browse job applications
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<BrowseJobApplicationsResponse>> BrowseJobApplications(
+        [FromQuery] BrowseJobApplicationsQuery query, CancellationToken cancellationToken = default)
+    {
+        var response = await Mediator.Send(query, cancellationToken);
+        return Ok(response);
+    }
+    
     /// <summary>
     /// Get job application by id
     /// </summary>

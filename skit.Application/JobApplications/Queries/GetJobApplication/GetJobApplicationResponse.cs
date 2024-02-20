@@ -2,4 +2,4 @@
 
 namespace skit.Application.JobApplications.Queries.GetJobApplication;
 
-public sealed record GetJobApplicationResponse(JobApplicationDto? JobApplicationDto);
+public sealed record GetJobApplicationResponse(JobApplicationDetailsDto? JobApplicationDto);
