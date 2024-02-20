@@ -33,7 +33,8 @@ public class C_OffersController : BaseController
     [HttpGet("{offerId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<GetOfferResponse>> GetOffer([FromRoute] Guid offerId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GetOfferResponse>> GetOffer([FromRoute] Guid offerId, 
+        CancellationToken cancellationToken = default)
     {
         var response = await Mediator.Send(new GetOfferQuery(offerId), cancellationToken);
 
