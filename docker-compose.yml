@@ -3,7 +3,7 @@
 services:
   api:
     image: skitskni/api:latest
-    depends_on: 
+    depends_on:
       - db
     ports:
       - '5000:80'
@@ -22,6 +22,11 @@ services:
       - postgres-data:/var/lib/postgresql/data
     depends_on:
       - minio
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
         
   minio:
     image: minio/minio:latest

@@ -27,18 +27,17 @@ public sealed class S3StorageService : IS3StorageService
     public async Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken)
     {
         var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-
-        await using var stream = file.OpenReadStream();
-        var request = new PutObjectRequest
-        {
-            BucketName = _s3Config.BucketName,
-            Key = uniqueFileName,
-            InputStream = stream,
-            ContentType = file.ContentType
-        };
+        
         try
         {
-            await _s3Client.PutObjectAsync(request, cancellationToken);
+            await using var stream = file.OpenReadStream();
+            await _s3Client.PutObjectAsync(new PutObjectRequest()
+            {
+                BucketName = _s3Config.BucketName,
+                Key = uniqueFileName,
+                InputStream = stream,
+                ContentType = file.ContentType
+            }, cancellationToken);
         }
         catch (AmazonS3Exception e)
         {
@@ -50,7 +49,16 @@ public sealed class S3StorageService : IS3StorageService
                 };
                 await _s3Client.PutBucketAsync(putBucketRequest, cancellationToken);
                 
-                await _s3Client.PutObjectAsync(request, cancellationToken);
+                await using var stream = file.OpenReadStream();
+                await _s3Client.PutObjectAsync(new PutObjectRequest()
+                {
+                    BucketName = _s3Config.BucketName,
+                    Key = uniqueFileName,
+                    InputStream = stream,
+                    ContentType = file.ContentType
+                }, cancellationToken);
+                
+                return uniqueFileName;
             }
             
             throw new S3UploadException(e.ErrorCode);
