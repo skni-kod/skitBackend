@@ -24,6 +24,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddIdentityConfig(builder.Configuration);
+builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
@@ -47,6 +48,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
