@@ -85,8 +85,10 @@ public sealed class S3StorageService : IS3StorageService
                     ContentDisposition = $"attachment; filename=\"{fileName}\""
                 }
             };
-
+            
             var url = _s3Client.GetPreSignedURL(request);
+            url = url.Replace("https", "http");
+            
             return url;
         }
         catch (AmazonS3Exception e)
