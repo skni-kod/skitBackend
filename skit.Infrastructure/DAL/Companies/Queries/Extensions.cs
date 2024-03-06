@@ -13,6 +13,7 @@ internal static class Extensions
         {
             Name = company.Name,
             Size = company.Size,
+            ImageId = company.ImageId
         };
     }
     
