@@ -1,5 +1,6 @@
 ﻿using skit.Core.Addresses.Entities;
 using skit.Core.Companies.Enums;
+using skit.Core.Files.Entities;
 using skit.Core.Identity.Entities;
 using skit.Core.Offers.Entities;
 using skit.Shared.Abstractions.Entities;
@@ -15,6 +16,9 @@ public sealed class Company : Entity
 
     public Guid OwnerId { get; private set; }
     public User Owner { get; private set; }
+    
+    public Guid? ImageId { get; private set; }
+    public SystemFile Image { get; private set; }
 
     private List<Address> _addresses = new();
     public IReadOnlyCollection<Address> Addresses => _addresses;
@@ -42,5 +46,10 @@ public sealed class Company : Entity
         Description = description;
         Size = size;
         Links = links;
+    }
+
+    public void SetImage(Guid imageId)
+    {
+        ImageId = imageId;
     }
 }

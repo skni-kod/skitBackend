@@ -8,7 +8,4 @@ public sealed record UpdateCompanyCommand(
     string Name,
     string? Description,
     CompanySize Size,
-    string? Links) : IRequest<CreateOrUpdateResponse>
-{
-    internal Guid CompanyId { get; set; }
-}
+    string? Links) : IRequest<CreateOrUpdateResponse>;

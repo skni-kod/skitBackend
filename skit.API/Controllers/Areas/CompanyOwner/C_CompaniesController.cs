@@ -4,6 +4,7 @@ using skit.API.Common;
 using skit.Application.Companies.Commands.CreateCompany;
 using skit.Application.Companies.Commands.DeleteCompany;
 using skit.Application.Companies.Commands.UpdateCompany;
+using skit.Application.Companies.Commands.UploadCompanyImage;
 using skit.Application.Companies.Queries.CompanyOwner.GetCompanyForUpdate;
 using skit.Core.Identity.DTO;
 using skit.Core.Identity.Static;
@@ -31,11 +32,10 @@ public class C_CompaniesController : BaseController
     /// Update company by Id
     /// </summary>
     [ApiAuthorize(Roles = UserRoles.CompanyOwner)]
-    [HttpPut("{companyId:guid}")]
+    [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<CreateOrUpdateResponse>> UpdateCompany([FromRoute] Guid companyId, [FromBody] UpdateCompanyCommand command, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<CreateOrUpdateResponse>> UpdateCompany([FromBody] UpdateCompanyCommand command, CancellationToken cancellationToken = default)
     {
-        command.CompanyId = companyId;
         var result = await Mediator.Send(command, cancellationToken);
         return Ok(result);
     }
@@ -62,6 +62,18 @@ public class C_CompaniesController : BaseController
     public async Task<ActionResult> DeleteCompany(CancellationToken cancellationToken = default)
     {
         await Mediator.Send(new DeleteCompanyCommand(), cancellationToken);
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Upload company image
+    /// </summary>
+    [ApiAuthorize(Roles = UserRoles.CompanyOwner)]
+    [HttpPut("upload-image")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> UploadPhoto(IFormFile file, CancellationToken cancellationToken = default)
+    {
+        await Mediator.Send(new UploadCompanyImageCommand(file), cancellationToken);
         return Ok();
     }
 }
