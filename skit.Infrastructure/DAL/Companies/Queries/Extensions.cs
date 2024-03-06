@@ -7,13 +7,13 @@ namespace skit.Infrastructure.DAL.Companies.Queries;
 
 internal static class Extensions
 {
-    public static CompanyDto AsDto(this Company company)
+    public static CompanyDto AsDto(this Company company, string? imageUrl)
     {
         return new CompanyDto
         {
             Name = company.Name,
             Size = company.Size,
-            ImageId = company.ImageId
+            ImageUrl = imageUrl
         };
     }
     

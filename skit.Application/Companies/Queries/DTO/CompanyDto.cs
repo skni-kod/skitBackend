@@ -7,5 +7,5 @@ public sealed class CompanyDto
 {
     public string Name { get; set; }
     public BaseEnum? Size { get; set; }
-    public Guid? ImageId { get; set; }
+    public string? ImageUrl { get; set; }
 }

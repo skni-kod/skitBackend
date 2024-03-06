@@ -5,12 +5,13 @@ namespace skit.Infrastructure.DAL.Technologies.Queries;
 
 internal static class Extensions
 {
-    public static TechnologiesDto AsDto(this Technology technology)
+    public static TechnologiesDto AsDto(this Technology technology, string? imageUrl)
     {
         return new()
         {
             Id = technology.Id,
-            Name = technology.Name
+            Name = technology.Name,
+            ImageUrl = imageUrl
         };
     }
 }
